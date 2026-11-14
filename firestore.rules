@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Admin yetkisi: sunucu, ADMIN_EMAILS listesindeki hesaplara "admin" yetkisi (custom claim) verir.
+    // Bkz. src/app/api/admin/session/route.ts
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    // Etkinlikler: herkes okur, sadece admin yazar
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Blog yazıları: herkes okur, sadece admin yazar
+    match /blog/{postId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Dergi sayıları: herkes sadece yayındaki sayıları okur; taslakları ve yazmayı sadece admin yapar
+    match /magazine/{issueId} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Sertifikalar: doğrulama sunucu üzerinden yapılır; tarayıcıdan sadece admin okur, kimse yazamaz
+    match /certificates/{certificateId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+    match /certificate_events/{eventId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+    // Katılımcı e-postaları (kişisel veri)
+    match /certificate_emails/{certificateId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // Bülten aboneleri: tarayıcıdan erişim tamamen kapalı.
+    // Abonelik ve listeleme sadece sunucu (API) üzerinden yapılır.
+    match /newsletter/{subscriberId} {
+      allow read, write: if false;
+    }
+
+    // Burada tanımlanmayan her koleksiyon kapalıdır
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

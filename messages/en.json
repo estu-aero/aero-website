@@ -1,0 +1,408 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "team": "Team",
+    "subteams": "Project Teams",
+    "events": "Events",
+    "sponsors": "Sponsors",
+    "contact": "Contact",
+    "blog": "Blog",
+    "joinUs": "Join Us",
+    "menuTitle": "Menu",
+    "menuDescription": "Browse ESTU AERO pages",
+    "toggleLanguage": "Toggle language",
+    "toggleTheme": "Toggle theme",
+    "toggleMenu": "Toggle menu",
+    "language": {
+      "english": "English",
+      "turkish": "Turkish"
+    },
+    "magazine": "Magazine"
+  },
+  "hero": {
+    "title": "ESTU Aeronautics and Aerospace Club",
+    "subtitle": "Eskisehir Technical University",
+    "description": "A student community that brings together engineering students interested in aviation and space, supporting their growth through technical training, industry meetups and project work.",
+    "cta": "About Us",
+    "joinUs": "Join Us"
+  },
+  "about": {
+    "title": "About Us",
+    "intro": [
+      "Eskisehir Technical University Aeronautics and Aerospace Club (ESTU AERO) is a student community that brings together engineering students interested in aviation and space, supporting their technical and social development.",
+      "Our club aims to help members take an active role in their career journeys, strengthen their connections with the industry and build their engineering skills. To this end, we organize technical training, seminars, summits, project work and technical trips.",
+      "Going beyond theory, ESTU AERO aims to build an ecosystem where students can solve real engineering problems through project teams.",
+      "We work to raise individuals who embrace aviation culture and think like engineers."
+    ],
+    "callout": "ESTU AERO was founded in {year}. In the {period} term, it is led by:",
+    "president": "Club President",
+    "advisor": "Club Advisor",
+    "activitiesTitle": "What We Do",
+    "activitiesSubtitle": "Activities we plan to launch as our club gets started",
+    "activities": {
+      "sectorMeetings": {
+        "title": "Industry Meetups",
+        "description": "Interactive events with engineers from the aviation and defense industry, where participants can ask questions and connect one-on-one."
+      },
+      "softwareTraining": {
+        "title": "Technical Software Training",
+        "description": "Hands-on training in the engineering and design software widely used in the aviation industry."
+      },
+      "projectTeams": {
+        "title": "UAV-Focused Project Teams",
+        "description": "Project teams focused on aviation, especially unmanned aerial vehicles and rocket systems."
+      },
+      "academic": {
+        "title": "Academic Work",
+        "description": "Technical research, paper writing and content that shares knowledge."
+      },
+      "technicalTrips": {
+        "title": "Technical Trips",
+        "description": "Visits to aviation and defense organizations to see production and engineering processes first-hand."
+      },
+      "partnerships": {
+        "title": "Partnerships",
+        "description": "Partnerships with industry companies, academic communities and institutions that keep the club sustainable."
+      }
+    },
+    "vision": "Our Vision",
+    "visionText": "To be a productive and influential student community that leads the way in aviation and defense in Türkiye.",
+    "mission": "Our Mission",
+    "missionText": "To support the technical and personal growth of our members by:",
+    "missionPoints": [
+      "Creating opportunities to connect with industry professionals",
+      "Organizing technical training, events and projects",
+      "Offering an ecosystem where theory turns into practice"
+    ]
+  },
+  "team": {
+    "title": "Our Team",
+    "subtitle": "Meet the ESTU AERO team",
+    "joinButton": "Join Us",
+    "join": "Join Us",
+    "joinDescription": "Fill out the application form to join the ESTU AERO family and take an active role in our work.",
+    "sections": {
+      "boardOfDirectors": "Board of Directors",
+      "administrativeBoard": "Administrative Board",
+      "auditBoard": "Audit Board"
+    },
+    "viewProfile": "View profile",
+    "departmentLabel": "Department",
+    "yearLabel": "Year",
+    "year": "Year {year}",
+    "noInfo": "No information has been added for this person yet.",
+    "close": "Close"
+  },
+  "events": {
+    "title": "Our Events",
+    "subtitle": "We support our members' growth through industry meetups, technical training, seminars and technical trips.",
+    "upcomingTitle": "Upcoming Events",
+    "pastTitle": "Past Events",
+    "upcoming": "Upcoming Events",
+    "past": "Past Events",
+    "details": "Details",
+    "register": "Register",
+    "applyButton": "Application Form",
+    "newsletter": {
+      "title": "Stay Informed",
+      "description": "Join our newsletter for new events, trainings, and announcements.",
+      "button": "Join the Newsletter"
+    }
+  },
+  "sponsors": {
+    "title": "Our Sponsors",
+    "subtitle": "Our valued partners who support ESTU AERO.",
+    "ourSponsors": "Organizations Supporting Us",
+    "comingSoon": "Coming Soon",
+    "comingSoonDescription": "Information about our sponsors and partners will be available on this page soon.",
+    "partnershipTitle": "Become Our Partner",
+    "partnershipDescription": "Partnering with ESTU AERO offers not only visibility, but also access to qualified talent, technical collaboration and long-term value.",
+    "contactUs": "Contact Us",
+    "benefits": [
+      {
+        "title": "A Qualified Audience",
+        "description": "Reach highly motivated engineering students aiming for careers in aviation and defense."
+      },
+      {
+        "title": "Lasting Visibility",
+        "description": "Through events, technical training and digital content, your brand stays in front of the right audience."
+      },
+      {
+        "title": "Future Engineers",
+        "description": "Meet project-driven, industry-ready talent at an early stage."
+      }
+    ]
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "subtitle": "Feel free to contact us with your questions, suggestions, or sponsorship and partnership offers.",
+    "info": {
+      "address": "Address",
+      "addressDetails": [
+        "Eskisehir Technical University",
+        "Eskisehir / Türkiye"
+      ],
+      "email": "Email",
+      "emailDetails": [
+        "estuucakveuzaykulubu@gmail.com"
+      ]
+    },
+    "social": {
+      "title": "Social Media"
+    },
+    "form": {
+      "title": "Send Message",
+      "name": "Full Name",
+      "namePlaceholder": "Your name and surname",
+      "email": "Email",
+      "emailPlaceholder": "example@email.com",
+      "phone": "Phone",
+      "phonePlaceholder": "05xx xxx xx xx",
+      "subject": "Subject",
+      "subjectPlaceholder": "Message subject",
+      "message": "Message",
+      "messageRequired": "Your Message",
+      "messagePlaceholder": "Write your message to us",
+      "privacy": "I accept the processing of my personal data.",
+      "send": "Send Message",
+      "sending": "Sending...",
+      "successMessage": "Your message has been sent successfully! We will get back to you as soon as possible.",
+      "errorMessage": "An error occurred while sending the message. Please try again later.",
+      "requiredFields": "Please fill in all required fields.",
+      "privacyRequired": "Please accept the privacy policy.",
+      "defaultSubject": "Contact Form Message",
+      "rateLimitError": "Too many requests. Please wait a few minutes.",
+      "disposableEmailError": "Disposable email addresses are not accepted."
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Our latest posts and news",
+    "readMore": "Read More"
+  },
+  "footer": {
+    "description": "A student community that brings together engineering students interested in aviation and space, supporting their technical and social development.",
+    "subtitle": "Eskişehir Technical University",
+    "brand": "ESTU Aeronautics and Aerospace Club",
+    "quickLinks": "Quick Links",
+    "resources": "Links",
+    "social": "Social Media",
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
+  },
+  "subteams": {
+    "title": "Our Teams",
+    "subtitle": "Project teams working within ESTU AERO",
+    "learnMore": "Learn More",
+    "joinTeam": "Join Us",
+    "achievementsTitle": "Our Achievements",
+    "cta": {
+      "title": "Join Our Teams",
+      "description": "Want to grow in UAVs, rocket systems, software or design? Our teams are always looking for new talent!"
+    }
+  },
+  "common": {
+    "scrollTop": "Scroll to top",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "search": "Search"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "events": {
+      "title": "Events",
+      "create": "New Event",
+      "edit": "Edit Event",
+      "delete": "Delete Event",
+      "form": {
+        "title": "Title",
+        "slug": "Slug",
+        "description": "Description",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "location": "Location",
+        "coverImage": "Cover Image",
+        "tags": "Tags",
+        "googleFormUrl": "Google Form Link",
+        "status": "Status",
+        "published": "Published",
+        "draft": "Draft"
+      }
+    },
+    "pages": {
+      "title": "Pages",
+      "edit": "Edit Page"
+    },
+    "media": {
+      "title": "Media",
+      "upload": "Upload",
+      "delete": "Delete"
+    }
+  },
+  "login": {
+    "title": "Admin Login",
+    "description": "Sign in to access admin panel",
+    "email": "Email",
+    "emailPlaceholder": "admin@example.com",
+    "password": "Password",
+    "submit": "Sign In",
+    "signingIn": "Signing in...",
+    "noAccount": "Don't have an account?",
+    "contactAdmin": "Contact system administrator to add admin users.",
+    "errors": {
+      "invalidCredentials": "Invalid email or password",
+      "invalidEmail": "Invalid email address",
+      "tooManyAttempts": "Too many failed attempts. Please try again later.",
+      "general": "An error occurred during sign in"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacy Policy",
+      "updated": "Last updated: November 2026",
+      "intro": "At ESTU Aeronautics and Aerospace Club (ESTU AERO) we care about the privacy of your personal data. This notice explains what data we collect through this website, why and how we process it, and your rights under the Turkish Personal Data Protection Law No. 6698 (KVKK).",
+      "sections": [
+        {
+          "title": "1. Data controller",
+          "paragraphs": [
+            "The data controller for personal data collected on this site is ESTU Aeronautics and Aerospace Club, a student club operating within Eskisehir Technical University.",
+            "Contact: estuucakveuzaykulubu@gmail.com"
+          ]
+        },
+        {
+          "title": "2. Data we collect",
+          "paragraphs": [
+            "Contact form: your name, email address, (optional) phone number, and the subject and content of your message.",
+            "Newsletter subscription: your email address and language preference.",
+            "Technical data: the services that host the site and provide bot protection may process technical records such as IP address and browser information for security purposes.",
+            "Membership applications are not collected on this site but through Google Forms; the data you share there is subject to the terms stated in that form.",
+            "Certificates: if a certificate is issued for an event you attended, your full name, email address, the event name and date. Your email address is only used to send you your certificate."
+          ]
+        },
+        {
+          "title": "3. Purposes and legal basis",
+          "paragraphs": [
+            "We process contact form data to reply to your message and resolve your request, based on the explicit consent you give when submitting the form.",
+            "We process newsletter data to send you our events and announcements by email, based on the explicit consent you give when subscribing.",
+            "We process technical data to keep the site secure and prevent abuse, based on legitimate interest.",
+            "We process certificate data to issue and deliver your certificate and to let third parties (e.g. employers) verify that it is genuine. Anyone with the Credential ID can see your full name, the event name and date on the verification page; your email address is never shown."
+          ]
+        },
+        {
+          "title": "4. Service providers",
+          "paragraphs": [
+            "We do not sell your data or share it with third parties for advertising. To run the site we rely on the following service providers, whose servers may be located abroad:",
+            "Vercel (hosting), Google Firebase (storing the newsletter subscriber list), Resend (sending newsletter emails), Web3Forms (delivering contact form messages to us), hCaptcha (bot protection on the contact form), Google Maps (the map on the contact page).",
+            "We also use Vercel Blob (storing magazine and certificate files)."
+          ]
+        },
+        {
+          "title": "5. Retention",
+          "paragraphs": [
+            "Contact form messages are kept for up to 2 years after your request is resolved.",
+            "Newsletter subscription data is kept until you unsubscribe, and deleted when you do.",
+            "Certificate records are kept indefinitely so they remain verifiable. You may request that your certificate be deleted or revoked."
+          ]
+        },
+        {
+          "title": "6. Cookies",
+          "paragraphs": [
+            "This site does not use advertising or analytics cookies. Your browser's local storage only holds a timestamp used to prevent repeated form submissions. Embedded services such as hCaptcha and Google Maps may use their own cookies."
+          ]
+        },
+        {
+          "title": "7. Your rights",
+          "paragraphs": [
+            "Under Article 11 of the KVKK, you have the right to learn whether your personal data is processed, to request information about it, to learn the purpose of processing, to request correction of incomplete or inaccurate data, to request deletion or destruction, and to object to processing.",
+            "To exercise these rights or to unsubscribe from the newsletter, email us at estuucakveuzaykulubu@gmail.com. We respond within 30 days at the latest."
+          ]
+        },
+        {
+          "title": "8. Changes",
+          "paragraphs": [
+            "We may update this notice when necessary. The current version is always published on this page."
+          ]
+        }
+      ]
+    },
+    "terms": {
+      "title": "Terms of Use",
+      "updated": "Last updated: November 2026",
+      "intro": "By using this website, you agree to the terms below.",
+      "sections": [
+        {
+          "title": "1. About the site",
+          "paragraphs": [
+            "This site was created to introduce Eskisehir Technical University Aeronautics and Aerospace Club (ESTU AERO), announce its events and enable communication. The views and content on the site belong to the club and do not represent the official position of Eskisehir Technical University."
+          ]
+        },
+        {
+          "title": "2. Use of content",
+          "paragraphs": [
+            "The texts, images and logos on the site belong to ESTU AERO or the respective rights holders. You may share them for personal, non-commercial purposes with attribution; any other use requires permission."
+          ]
+        },
+        {
+          "title": "3. Accuracy of information",
+          "paragraphs": [
+            "We try to keep the content current and accurate, but event dates, venues and other details may change without notice. Please contact us for confirmed information."
+          ]
+        },
+        {
+          "title": "4. External links",
+          "paragraphs": [
+            "The site links to external sites such as social media accounts and application forms. We are not responsible for the content or privacy practices of those sites."
+          ]
+        },
+        {
+          "title": "5. Acceptable use",
+          "paragraphs": [
+            "You must use the contact form and newsletter subscription only for their intended purpose. Attempts to damage the site, gain unauthorized access or abuse the forms are prohibited."
+          ]
+        },
+        {
+          "title": "6. Limitation of liability",
+          "paragraphs": [
+            "The site is provided \"as is\". We do not guarantee that it will operate without interruption or error, and we cannot be held liable for indirect damages arising from its use."
+          ]
+        },
+        {
+          "title": "7. Changes and contact",
+          "paragraphs": [
+            "We may update these terms when necessary. For questions: estuucakveuzaykulubu@gmail.com"
+          ]
+        }
+      ]
+    }
+  },
+  "magazine": {
+    "title": "AERO Magazine",
+    "subtitle": "Our club's aviation and space magazine. Read or download every issue here.",
+    "latest": "Latest Issue",
+    "previous": "Previous Issues",
+    "read": "Read",
+    "download": "Download PDF",
+    "pages": "{count} pages",
+    "emptyTitle": "Coming Soon",
+    "emptyDescription": "Our first issue is in the works. Subscribe to our newsletter to hear when it is published.",
+    "reader": {
+      "close": "Close",
+      "pageMode": "Page by page",
+      "scrollMode": "Scroll",
+      "previous": "Previous page",
+      "next": "Next page",
+      "loading": "Loading the magazine...",
+      "error": "The magazine could not be loaded. Please try downloading the PDF."
+    }
+  }
+}

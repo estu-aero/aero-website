@@ -1,0 +1,46 @@
+{
+  "nav": "Sertifika",
+  "certificate": {
+    "badge": "Resmî Doğrulama Sistemi",
+    "title": "Sertifika Doğrulama",
+    "description": "ESTÜ Uçak ve Uzay Kulübü tarafından verilen sertifikaları doğrulama kimliği ile doğrulayın.",
+    "inputLabel": "Doğrulama Kimliği",
+    "placeholder": "Sertifikada yazan kimliği girin",
+    "helper": "Kimlik sertifikanın üzerinde yazar.",
+    "verify": "Doğrula",
+    "verifying": "Doğrulanıyor...",
+    "validTitle": "Geçerli sertifika",
+    "validText": "Bu sertifika ESTÜ Uçak ve Uzay Kulübü tarafından verilmiştir.",
+    "revokedTitle": "İptal edilmiş sertifika",
+    "revokedText": "Bu sertifika ESTÜ Uçak ve Uzay Kulübü tarafından verilmiş, ancak daha sonra iptal edilmiştir ve artık geçerli değildir.",
+    "name": "Ad Soyad",
+    "event": "Etkinlik",
+    "date": "Veriliş Tarihi",
+    "credentialId": "Doğrulama Kimliği",
+    "download": "İndir",
+    "copy": "Doğrulama Bağlantısını Kopyala",
+    "copied": "Bağlantı Kopyalandı",
+    "toggleTheme": "Temayı değiştir",
+    "toggleLanguage": "Dili değiştir",
+    "errors": {
+      "notFound": {
+        "title": "Sertifika bulunamadı",
+        "text": "Bu doğrulama kimliğine ait bir sertifika yok. Lütfen doğru yazıldığını kontrol edin."
+      },
+      "invalidId": {
+        "title": "Geçersiz doğrulama kimliği",
+        "text": "Doğrulama kimliği AERO-XXXX-XXXX-XXXX biçimindedir."
+      },
+      "tooMany": {
+        "title": "Çok fazla deneme",
+        "text": "Lütfen bir dakika bekleyip tekrar deneyin."
+      },
+      "error": {
+        "title": "Bir sorun oluştu",
+        "text": "Sertifika şu anda doğrulanamadı. Lütfen daha sonra tekrar deneyin."
+      }
+    },
+    "loadingDocument": "Sertifika yükleniyor...",
+    "documentError": "Sertifika gösterilemedi. İndirerek açabilirsiniz."
+  }
+}

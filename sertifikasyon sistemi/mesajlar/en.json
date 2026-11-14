@@ -1,0 +1,46 @@
+{
+  "nav": "Certificate",
+  "certificate": {
+    "badge": "Official Verification System",
+    "title": "Certificate Verification",
+    "description": "Verify certificates issued by the ESTU Aeronautics and Aerospace Club using the credential ID.",
+    "inputLabel": "Credential ID",
+    "placeholder": "Enter the ID printed on the certificate",
+    "helper": "The ID is printed on the certificate.",
+    "verify": "Verify",
+    "verifying": "Verifying...",
+    "validTitle": "Valid certificate",
+    "validText": "This certificate was issued by the ESTU Aeronautics and Aerospace Club.",
+    "revokedTitle": "Revoked certificate",
+    "revokedText": "This certificate was issued by the ESTU Aeronautics and Aerospace Club but has since been revoked and is no longer valid.",
+    "name": "Name Surname",
+    "event": "Event",
+    "date": "Issued Date",
+    "credentialId": "Credential ID",
+    "download": "Download",
+    "copy": "Copy Verification Link",
+    "copied": "Link Copied",
+    "toggleTheme": "Toggle theme",
+    "toggleLanguage": "Change language",
+    "errors": {
+      "notFound": {
+        "title": "Certificate not found",
+        "text": "No certificate matches this credential ID. Please check that it was entered correctly."
+      },
+      "invalidId": {
+        "title": "Invalid credential ID",
+        "text": "A credential ID looks like AERO-XXXX-XXXX-XXXX."
+      },
+      "tooMany": {
+        "title": "Too many attempts",
+        "text": "Please wait a minute and try again."
+      },
+      "error": {
+        "title": "Something went wrong",
+        "text": "The certificate could not be verified right now. Please try again later."
+      }
+    },
+    "loadingDocument": "Loading certificate...",
+    "documentError": "The certificate could not be displayed. You can download it instead."
+  }
+}

@@ -1,0 +1,408 @@
+{
+  "nav": {
+    "home": "Ana Sayfa",
+    "about": "Hakkımızda",
+    "team": "Ekibimiz",
+    "subteams": "Takımlarımız",
+    "events": "Etkinlikler",
+    "sponsors": "Sponsorlar",
+    "contact": "İletişim",
+    "blog": "Blog",
+    "joinUs": "Üye Ol",
+    "menuTitle": "Menü",
+    "menuDescription": "ESTÜ AERO sayfalarında gezin",
+    "toggleLanguage": "Dil değiştir",
+    "toggleTheme": "Tema değiştir",
+    "toggleMenu": "Menüyü aç/kapat",
+    "language": {
+      "english": "English",
+      "turkish": "Türkçe"
+    },
+    "magazine": "Dergi"
+  },
+  "hero": {
+    "title": "ESTÜ Uçak ve Uzay Kulübü",
+    "subtitle": "Eskişehir Teknik Üniversitesi",
+    "description": "Havacılık ve uzay alanına ilgi duyan mühendis adaylarını bir araya getiren; teknik eğitimler, sektör buluşmaları ve proje çalışmalarıyla üyelerinin gelişimini destekleyen öğrenci topluluğu.",
+    "cta": "Hakkımızda",
+    "joinUs": "Üye Ol"
+  },
+  "about": {
+    "title": "Hakkımızda",
+    "intro": [
+      "Eskişehir Teknik Üniversitesi Uçak ve Uzay Kulübü (ESTÜ AERO), havacılık ve uzay alanına ilgi duyan mühendis adaylarını bir araya getiren, teknik ve sosyal gelişimi destekleyen bir öğrenci topluluğudur.",
+      "Kulübümüz; üyelerinin kariyer yolculuklarında aktif rol almasını sağlamak, sektörle etkileşimlerini artırmak ve mühendislik yetkinliklerini geliştirmek amacıyla faaliyet gösterir. Bu doğrultuda teknik eğitimler, seminerler, zirveler, proje çalışmaları ve teknik geziler düzenler.",
+      "ESTÜ AERO, yalnızca teorik bilgiyle sınırlı kalmayıp proje takımları aracılığıyla öğrencilerin gerçek mühendislik problemlerine çözüm üretebilecekleri bir ekosistem oluşturmayı hedefler.",
+      "Havacılık kültürünü benimsemiş, mühendislik bakış açısına sahip bireyler yetiştirmek için çalışıyoruz."
+    ],
+    "callout": "ESTÜ AERO {year} yılında kuruldu. {period} döneminde aşağıdaki yönetimle faaliyet göstermektedir:",
+    "president": "Kulüp Başkanı",
+    "advisor": "Kulüp Danışmanı",
+    "activitiesTitle": "Neler Yapıyoruz?",
+    "activitiesSubtitle": "Kuruluş sürecimizle birlikte hayata geçirmeyi planladığımız çalışmalar",
+    "activities": {
+      "sectorMeetings": {
+        "title": "Sektör Buluşmaları",
+        "description": "Havacılık ve savunma sanayiinde görev alan mühendislerle, katılımcıların doğrudan soru sorup birebir etkileşim kurabildiği interaktif etkinlikler."
+      },
+      "softwareTraining": {
+        "title": "Teknik Yazılım Eğitimleri",
+        "description": "Havacılık sektöründe yaygın olarak kullanılan mühendislik ve tasarım programlarına yönelik uygulamalı eğitimler."
+      },
+      "projectTeams": {
+        "title": "İHA Odaklı Proje Takımları",
+        "description": "Başta insansız hava araçları ve roket sistemleri olmak üzere havacılık alanına odaklanan proje ekipleri."
+      },
+      "academic": {
+        "title": "Akademik Çalışmalar",
+        "description": "Teknik araştırmalar, makale çalışmaları ve bilgi paylaşımına yönelik içerik üretimi."
+      },
+      "technicalTrips": {
+        "title": "Teknik Geziler",
+        "description": "Havacılık ve savunma sanayiindeki kurumlara düzenlenen gezilerle üretim ve mühendislik süreçlerini yerinde inceleme."
+      },
+      "partnerships": {
+        "title": "İş Birlikleri",
+        "description": "Kulübün sürdürülebilirliğini sağlamak için sektör firmaları, akademik topluluklar ve kurumlarla kurulan iş birlikleri."
+      }
+    },
+    "vision": "Vizyonumuz",
+    "visionText": "Türkiye'de havacılık ve savunma alanında yön veren, üretken ve etkili bir öğrenci topluluğu olmak.",
+    "mission": "Misyonumuz",
+    "missionText": "Üyelerimizin teknik ve kişisel gelişimlerini desteklemek amacıyla:",
+    "missionPoints": [
+      "Sektör profesyonelleri ile etkileşim kurabilecekleri ortamlar oluşturmak",
+      "Teknik eğitimler, etkinlikler ve projeler düzenlemek",
+      "Teorik bilgiyi pratiğe dönüştürebilecekleri bir ekosistem sunmak"
+    ]
+  },
+  "team": {
+    "title": "Ekibimiz",
+    "subtitle": "ESTÜ AERO ekibini tanıyın",
+    "joinButton": "Aramıza Katıl",
+    "join": "Aramıza Katılın",
+    "joinDescription": "ESTÜ AERO ailesine katılmak ve çalışmalarımızda aktif rol almak için başvuru formunu doldurun.",
+    "sections": {
+      "boardOfDirectors": "Yönetim Kurulu",
+      "administrativeBoard": "İdari Kurul",
+      "auditBoard": "Denetim Kurulu"
+    },
+    "viewProfile": "Profili görüntüle",
+    "departmentLabel": "Bölüm",
+    "yearLabel": "Sınıf",
+    "year": "{year}. Sınıf",
+    "noInfo": "Bu kişi için henüz bilgi eklenmedi.",
+    "close": "Kapat"
+  },
+  "events": {
+    "title": "Etkinliklerimiz",
+    "subtitle": "Sektör buluşmaları, teknik eğitimler, seminerler ve teknik gezilerle üyelerimizin gelişimine katkı sağlıyoruz.",
+    "upcomingTitle": "Yaklaşan Etkinlikler",
+    "pastTitle": "Geçmiş Etkinlikler",
+    "upcoming": "Yaklaşan Etkinlikler",
+    "past": "Geçmiş Etkinlikler",
+    "details": "Detaylar",
+    "register": "Kayıt Ol",
+    "applyButton": "Başvuru Formu",
+    "newsletter": {
+      "title": "Etkinliklerden Haberdar Olun",
+      "description": "Yeni etkinlikler, eğitimler ve duyurular için bültenimize katılın.",
+      "button": "Bültene Katıl"
+    }
+  },
+  "sponsors": {
+    "title": "Sponsorlarımız",
+    "subtitle": "ESTÜ AERO'yu destekleyen değerli iş ortaklarımız.",
+    "ourSponsors": "Bizi Destekleyen Kurumlar",
+    "comingSoon": "Çok Yakında",
+    "comingSoonDescription": "Sponsorlarımız ve iş ortaklarımız hakkında bilgiler yakında bu sayfada yer alacak.",
+    "partnershipTitle": "İş Ortağımız Olun",
+    "partnershipDescription": "ESTÜ AERO ile kuracağınız iş birliği; görünürlüğün yanı sıra nitelikli insan kaynağına erişim, teknik etkileşim ve uzun vadeli değer üretimi imkânı sunar.",
+    "contactUs": "Bize Ulaşın",
+    "benefits": [
+      {
+        "title": "Nitelikli Hedef Kitle",
+        "description": "Havacılık ve savunma sanayiinde kariyer hedefleyen, motivasyonu yüksek mühendislik öğrencilerine doğrudan ulaşın."
+      },
+      {
+        "title": "Sürdürülebilir Görünürlük",
+        "description": "Etkinlikler, teknik eğitimler ve dijital içeriklerle markanız hedef kitleyle kalıcı olarak buluşur."
+      },
+      {
+        "title": "Geleceğin Mühendisleri",
+        "description": "Proje odaklı çalışan, sektöre hazır yetenekleri erken aşamada tanıma fırsatı."
+      }
+    ]
+  },
+  "contact": {
+    "title": "İletişime Geçin",
+    "subtitle": "Sorularınız, önerileriniz veya sponsorluk ve iş birliği teklifleriniz için bizimle iletişime geçmekten çekinmeyin.",
+    "info": {
+      "address": "Adres",
+      "addressDetails": [
+        "Eskişehir Teknik Üniversitesi",
+        "Eskişehir / Türkiye"
+      ],
+      "email": "E-posta",
+      "emailDetails": [
+        "estuucakveuzaykulubu@gmail.com"
+      ]
+    },
+    "social": {
+      "title": "Sosyal Medya"
+    },
+    "form": {
+      "title": "Mesaj Gönderin",
+      "name": "Ad Soyad",
+      "namePlaceholder": "Adınız ve soyadınız",
+      "email": "E-posta",
+      "emailPlaceholder": "ornek@posta.com",
+      "phone": "Telefon",
+      "phonePlaceholder": "05xx xxx xx xx",
+      "subject": "Konu",
+      "subjectPlaceholder": "Mesaj konusu",
+      "message": "Mesaj",
+      "messageRequired": "Mesajınız",
+      "messagePlaceholder": "Bize iletmek istediğiniz mesajı yazın",
+      "privacy": "Kişisel verilerimin işlenmesini kabul ediyorum.",
+      "send": "Mesajı Gönder",
+      "sending": "Gönderiliyor...",
+      "successMessage": "Mesajınız başarıyla gönderildi! En kısa sürede size geri dönüş yapacağız.",
+      "errorMessage": "Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+      "requiredFields": "Lütfen tüm zorunlu alanları doldurun.",
+      "privacyRequired": "Lütfen gizlilik politikasını kabul edin.",
+      "defaultSubject": "İletişim Formu Mesajı",
+      "rateLimitError": "Çok fazla istek gönderdiniz. Lütfen birkaç dakika bekleyin.",
+      "disposableEmailError": "Geçici email adresleri kabul edilmemektedir."
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Son yazılarımız ve haberler",
+    "readMore": "Devamını Oku"
+  },
+  "footer": {
+    "description": "Havacılık ve uzay alanına ilgi duyan mühendis adaylarını bir araya getiren, teknik ve sosyal gelişimi destekleyen öğrenci topluluğu.",
+    "subtitle": "Eskişehir Teknik Üniversitesi",
+    "brand": "ESTÜ Uçak ve Uzay Kulübü",
+    "quickLinks": "Hızlı Erişim",
+    "resources": "Bağlantılar",
+    "social": "Sosyal Medya",
+    "rights": "Tüm hakları saklıdır.",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Kullanım Şartları"
+  },
+  "subteams": {
+    "title": "Takımlarımız",
+    "subtitle": "ESTÜ AERO bünyesinde faaliyet gösteren proje takımlarımız",
+    "learnMore": "Detaylı Bilgi",
+    "joinTeam": "Aramıza Katıl",
+    "achievementsTitle": "Başarılarımız",
+    "cta": {
+      "title": "Takımlarımıza Katılın",
+      "description": "İHA, roket sistemleri, yazılım veya tasarım alanında kendinizi geliştirmek mi istiyorsunuz? Takımlarımız yeni yetenekler arıyor!"
+    }
+  },
+  "common": {
+    "scrollTop": "Yukarı çık",
+    "loading": "Yükleniyor...",
+    "error": "Bir hata oluştu",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "create": "Oluştur",
+    "back": "Geri",
+    "next": "İleri",
+    "submit": "Gönder",
+    "search": "Ara"
+  },
+  "admin": {
+    "title": "Yönetim Paneli",
+    "events": {
+      "title": "Etkinlikler",
+      "create": "Yeni Etkinlik",
+      "edit": "Etkinliği Düzenle",
+      "delete": "Etkinliği Sil",
+      "form": {
+        "title": "Başlık",
+        "slug": "Slug",
+        "description": "Açıklama",
+        "startDate": "Başlangıç Tarihi",
+        "endDate": "Bitiş Tarihi",
+        "location": "Konum",
+        "coverImage": "Kapak Görseli",
+        "tags": "Etiketler",
+        "googleFormUrl": "Google Form Linki",
+        "status": "Durum",
+        "published": "Yayınlandı",
+        "draft": "Taslak"
+      }
+    },
+    "pages": {
+      "title": "Sayfalar",
+      "edit": "Sayfayı Düzenle"
+    },
+    "media": {
+      "title": "Medya",
+      "upload": "Yükle",
+      "delete": "Sil"
+    }
+  },
+  "login": {
+    "title": "Admin Girişi",
+    "description": "Admin paneline erişmek için giriş yapın",
+    "email": "E-posta",
+    "emailPlaceholder": "admin@ornek.com",
+    "password": "Şifre",
+    "submit": "Giriş Yap",
+    "signingIn": "Giriş yapılıyor...",
+    "noAccount": "Hesabınız yok mu?",
+    "contactAdmin": "Admin ekleme için sistem yöneticisiyle iletişime geçin.",
+    "errors": {
+      "invalidCredentials": "E-posta veya şifre hatalı",
+      "invalidEmail": "Geçersiz e-posta adresi",
+      "tooManyAttempts": "Çok fazla başarısız deneme. Lütfen daha sonra tekrar deneyin.",
+      "general": "Giriş yapılırken bir hata oluştu"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Gizlilik Politikası ve KVKK Aydınlatma Metni",
+      "updated": "Son güncelleme: Kasım 2026",
+      "intro": "ESTÜ Uçak ve Uzay Kulübü (ESTÜ AERO) olarak kişisel verilerinizin gizliliğine önem veriyoruz. Bu metin, bu web sitesi üzerinden hangi verileri topladığımızı, bunları neden ve nasıl işlediğimizi ve 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamındaki haklarınızı açıklar.",
+      "sections": [
+        {
+          "title": "1. Veri sorumlusu",
+          "paragraphs": [
+            "Bu sitede toplanan kişisel veriler bakımından veri sorumlusu, Eskişehir Teknik Üniversitesi bünyesinde faaliyet gösteren ESTÜ Uçak ve Uzay Kulübü'dür.",
+            "İletişim: estuucakveuzaykulubu@gmail.com"
+          ]
+        },
+        {
+          "title": "2. Topladığımız veriler",
+          "paragraphs": [
+            "İletişim formu: adınız ve soyadınız, e-posta adresiniz, (isteğe bağlı) telefon numaranız, mesajınızın konusu ve içeriği.",
+            "Bülten aboneliği: e-posta adresiniz ve dil tercihiniz.",
+            "Teknik veriler: siteyi barındıran ve bot korumasını sağlayan hizmetler, güvenlik amacıyla IP adresi ve tarayıcı bilgisi gibi teknik kayıtları işleyebilir.",
+            "Üyelik başvurusu bu site üzerinden değil, Google Formlar üzerinden alınır; orada paylaştığınız veriler ilgili formda belirtilen koşullara tabidir.",
+            "Sertifikalar: katıldığınız etkinlik için sertifika düzenlenirse adınız ve soyadınız, e-posta adresiniz, etkinlik adı ve tarihi. E-posta adresiniz sadece sertifikanızı size göndermek için kullanılır."
+          ]
+        },
+        {
+          "title": "3. Verileri işleme amaçlarımız ve hukuki sebep",
+          "paragraphs": [
+            "İletişim formu verilerini, mesajınızı yanıtlamak ve talebinizi sonuçlandırmak amacıyla; formu gönderirken verdiğiniz açık rızaya dayanarak işleriz.",
+            "Bülten verilerini, size etkinlik ve duyurularımızı e-postayla iletmek amacıyla; abone olurken verdiğiniz açık rızaya dayanarak işleriz.",
+            "Teknik verileri, sitenin güvenliğini sağlamak ve kötüye kullanımı önlemek amacıyla meşru menfaat kapsamında işleriz.",
+            "Sertifika verilerini, sertifikanızı düzenlemek, size iletmek ve üçüncü kişilerin (ör. işverenlerin) sertifikanın gerçekliğini doğrulayabilmesi amacıyla işleriz. Doğrulama kimliğine sahip olan herkes sertifika sayfasında adınızı, soyadınızı, etkinlik adını ve tarihini görebilir; e-posta adresiniz gösterilmez."
+          ]
+        },
+        {
+          "title": "4. Verilerin aktarıldığı hizmet sağlayıcılar",
+          "paragraphs": [
+            "Verilerinizi satmayız ve reklam amacıyla üçüncü kişilerle paylaşmayız. Sitenin çalışması için aşağıdaki hizmet sağlayıcılardan yararlanırız; bu sağlayıcıların sunucuları yurt dışında bulunabilir:",
+            "Vercel (sitenin barındırılması), Google Firebase (bülten abone listesinin saklanması), Resend (bülten e-postalarının gönderimi), Web3Forms (iletişim formu mesajlarının tarafımıza iletilmesi), hCaptcha (iletişim formunda bot koruması), Google Haritalar (iletişim sayfasındaki harita).",
+            "Ayrıca Vercel Blob (dergi ve sertifika dosyalarının saklanması) hizmetinden yararlanırız."
+          ]
+        },
+        {
+          "title": "5. Saklama süresi",
+          "paragraphs": [
+            "İletişim formu mesajları, talebiniz sonuçlandıktan sonra en fazla 2 yıl saklanır.",
+            "Bülten aboneliği verileri, abonelikten çıkana kadar saklanır; çıktığınızda silinir.",
+            "Sertifika kayıtları, doğrulanabilmeleri için süresiz saklanır. Sertifikanızın silinmesini veya iptal edilmesini talep edebilirsiniz."
+          ]
+        },
+        {
+          "title": "6. Çerezler",
+          "paragraphs": [
+            "Bu sitede reklam veya analiz amaçlı çerez kullanılmaz. Tarayıcınızın yerel depolama alanında yalnızca formların art arda gönderilmesini önlemeye yarayan bir zaman bilgisi tutulur. hCaptcha ve Google Haritalar gibi gömülü hizmetler kendi çerezlerini kullanabilir."
+          ]
+        },
+        {
+          "title": "7. Haklarınız",
+          "paragraphs": [
+            "KVKK'nın 11. maddesi uyarınca; kişisel verilerinizin işlenip işlenmediğini öğrenme, işlenmişse bilgi talep etme, işlenme amacını öğrenme, eksik veya yanlış işlenmişse düzeltilmesini isteme, silinmesini veya yok edilmesini isteme ve işlemeye itiraz etme haklarına sahipsiniz.",
+            "Bu haklarınızı kullanmak veya bülten aboneliğinden çıkmak için estuucakveuzaykulubu@gmail.com adresine e-posta gönderebilirsiniz. Talebinizi en geç 30 gün içinde yanıtlarız."
+          ]
+        },
+        {
+          "title": "8. Değişiklikler",
+          "paragraphs": [
+            "Bu metni gerektiğinde güncelleyebiliriz. Güncel sürüm her zaman bu sayfada yayımlanır."
+          ]
+        }
+      ]
+    },
+    "terms": {
+      "title": "Kullanım Şartları",
+      "updated": "Son güncelleme: Kasım 2026",
+      "intro": "Bu web sitesini kullanarak aşağıdaki şartları kabul etmiş olursunuz.",
+      "sections": [
+        {
+          "title": "1. Site hakkında",
+          "paragraphs": [
+            "Bu site, Eskişehir Teknik Üniversitesi Uçak ve Uzay Kulübü'nün (ESTÜ AERO) tanıtımı, etkinlik duyuruları ve iletişimi amacıyla hazırlanmıştır. Sitede yer alan görüş ve içerikler kulübe aittir; Eskişehir Teknik Üniversitesi'nin resmî görüşünü yansıtmaz."
+          ]
+        },
+        {
+          "title": "2. İçeriğin kullanımı",
+          "paragraphs": [
+            "Sitedeki metinler, görseller ve logolar ESTÜ AERO'ya veya ilgili hak sahiplerine aittir. Kaynak göstermek koşuluyla kişisel ve ticari olmayan amaçlarla paylaşabilirsiniz; bunun dışındaki kullanımlar için izin almanız gerekir."
+          ]
+        },
+        {
+          "title": "3. Bilgilerin doğruluğu",
+          "paragraphs": [
+            "İçeriği güncel ve doğru tutmaya çalışırız; ancak etkinlik tarihleri, yerleri ve diğer bilgiler önceden haber verilmeksizin değişebilir. Kesin bilgi için bizimle iletişime geçmenizi öneririz."
+          ]
+        },
+        {
+          "title": "4. Dış bağlantılar",
+          "paragraphs": [
+            "Site, sosyal medya hesapları ve başvuru formları gibi dış sitelere bağlantılar içerir. Bu sitelerin içeriğinden ve gizlilik uygulamalarından sorumlu değiliz."
+          ]
+        },
+        {
+          "title": "5. Kabul edilebilir kullanım",
+          "paragraphs": [
+            "İletişim formunu ve bülten aboneliğini yalnızca amacına uygun şekilde kullanmalısınız. Siteye zarar vermeye, yetkisiz erişim sağlamaya veya formları kötüye kullanmaya yönelik girişimler yasaktır."
+          ]
+        },
+        {
+          "title": "6. Sorumluluğun sınırı",
+          "paragraphs": [
+            "Site \"olduğu gibi\" sunulur. Sitenin kesintisiz veya hatasız çalışacağını garanti etmeyiz; sitenin kullanımından doğabilecek dolaylı zararlardan sorumlu tutulamayız."
+          ]
+        },
+        {
+          "title": "7. Değişiklikler ve iletişim",
+          "paragraphs": [
+            "Bu şartları gerektiğinde güncelleyebiliriz. Sorularınız için: estuucakveuzaykulubu@gmail.com"
+          ]
+        }
+      ]
+    }
+  },
+  "magazine": {
+    "title": "AERO Dergi",
+    "subtitle": "Kulübümüzün havacılık ve uzay dergisi. Tüm sayıları buradan okuyabilir veya indirebilirsiniz.",
+    "latest": "Son Sayı",
+    "previous": "Önceki Sayılar",
+    "read": "Oku",
+    "download": "PDF indir",
+    "pages": "{count} sayfa",
+    "emptyTitle": "Çok Yakında",
+    "emptyDescription": "İlk sayımız hazırlanıyor. Yayımlandığında haberdar olmak için bültenimize abone olabilirsiniz.",
+    "reader": {
+      "close": "Kapat",
+      "pageMode": "Sayfa sayfa",
+      "scrollMode": "Kaydırmalı",
+      "previous": "Önceki sayfa",
+      "next": "Sonraki sayfa",
+      "loading": "Dergi yükleniyor...",
+      "error": "Dergi yüklenemedi. Lütfen PDF olarak indirmeyi deneyin."
+    }
+  }
+}
