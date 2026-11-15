@@ -112,14 +112,26 @@ export default function EventsPage() {
 
     return (
       <Card className="group hover:shadow-xl dark:hover:shadow-brand/20 dark:hover:ring-1 dark:hover:ring-brand/50 transition-all duration-300 rounded-2xl border-0 bg-white dark:bg-slate-950 hover:bg-white dark:hover:bg-slate-970 overflow-hidden hover:-translate-y-1 h-full flex flex-col">
-        <div className="relative h-56 w-full overflow-hidden">
+        <div className="relative aspect-square w-full overflow-hidden bg-neutral-900">
             {event.image ? (
-              <Image
-                src={event.image}
-                alt={event.title[locale]}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
-              />
+              <>
+                {/* Afiş kırpılmadan sığdırılır; boşluklar aynı görselin bulanık hali ile dolar */}
+                <Image
+                  src={event.image}
+                  alt=""
+                  aria-hidden
+                  fill
+                  sizes="(max-width: 768px) 100vw, 600px"
+                  className="scale-110 object-cover opacity-60 blur-xl"
+                />
+                <Image
+                  src={event.image}
+                  alt={event.title[locale]}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 600px"
+                  className="object-contain transition-transform duration-300 group-hover:scale-105"
+                />
+              </>
             ) : (
               // Kapak görseli yoksa marka renginde alan
               <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-brand to-neutral-950 text-3xl font-bold tracking-[0.3em] text-white/90">

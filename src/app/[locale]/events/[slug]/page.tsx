@@ -103,12 +103,14 @@ export default function EventDetailPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
             {event.image && (
-              <div className="relative h-72 lg:h-[480px] rounded-2xl overflow-hidden shadow-lg bg-gray-200">
+              // Afiş kendi oranında, kırpılmadan gösterilir
+              <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-200 dark:bg-slate-800">
                 <Image
                   src={event.image}
                   alt={event.title[locale]}
-                  fill
-                  className="object-cover"
+                  width={1200}
+                  height={1500}
+                  className="h-auto w-full"
                   priority
                   unoptimized
                 />
