@@ -65,7 +65,9 @@ const VARSAYILAN: Omit<SablonAyari, 'id' | 'ad' | 'dosya'> = {
 // \n yeni satır). Admin, sertifikaları oluşturmadan önce metni değiştirebilir.
 // sabitTarih: verilirse bu türdeki tüm sertifikaların veriliş tarihi budur (YYYY-AA-GG);
 // admin panelinde tarih alanı kilitlenir.
-export const SABLONLAR: (SablonAyari & { metinSablonu: string; sabitTarih?: string })[] = [
+type SablonTanimi = SablonAyari & { metinSablonu: string; sabitTarih?: string };
+
+const TEMEL_SABLONLAR: SablonTanimi[] = [
   {
     id: 'kurucu-uye',
     ad: 'Kurucu Üye Sertifikası',
@@ -94,6 +96,16 @@ export const SABLONLAR: (SablonAyari & { metinSablonu: string; sabitTarih?: stri
     ...VARSAYILAN,
   },
 ];
+
+// Her türün iki tasarımı var: logonun yanında üniversite adı yazan ve sade (yazısız) olan.
+// Sade dosyalar "-sade.pdf" ile biter; kimlikleri de "-sade" ile biter (ör. katilim-sade).
+export const SABLONLAR: SablonTanimi[] = TEMEL_SABLONLAR.flatMap((s) => [
+  { ...s, ad: `${s.ad} — Üniversite adıyla` },
+  { ...s, id: `${s.id}-sade`, ad: `${s.ad} — Sade`, dosya: s.dosya.replace(/\.pdf$/, '-sade.pdf') },
+]);
+
+// "katilim-sade" -> "katilim": tasarımdan bağımsız sertifika türü (mail metni için)
+export const sablonTuru = (id: string) => id.replace(/-sade$/, '');
 
 export const sablonBul = (id: string) => SABLONLAR.find((s) => s.id === id);
 

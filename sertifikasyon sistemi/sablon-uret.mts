@@ -33,7 +33,8 @@ function ortalaYaz(sayfa: PDFPage, font: PDFFont, metin: string, boyut: number, 
   sayfa.drawText(metin, { x: merkezX - g / 2, y: y(ustOran), size: boyut, font, color: renk });
 }
 
-async function sablonUret(dosya: string, baslik: string) {
+// universiteAdi: true -> logonun yanında "Eskişehir Teknik Üniversitesi" yazar; false -> sade tasarım
+async function sablonUret(dosya: string, baslik: string, universiteAdi: boolean) {
   const pdf = await PDFDocument.create();
   pdf.registerFontkit(fontkit);
   const normal = await pdf.embedFont(await readFile(`${KLASOR}/fontlar/LiberationSans-Regular.ttf`), { subset: true });
@@ -55,11 +56,30 @@ async function sablonUret(dosya: string, baslik: string) {
   // İnce çerçeve
   sayfa.drawRectangle({ x: 26, y: 26, width: W - 52, height: H - 34 - 26 - 12, borderColor: ACIK_GRI, borderWidth: 0.8 });
 
-  // Logo (AERO | ESTÜ)
+  // Logo (AERO | ESTÜ) ve sağında üniversite adı; ikisi birlikte ortalanır
   const logoYukseklik = 52;
   const logoGenislik = (logo.width / logo.height) * logoYukseklik;
-  sayfa.drawImage(logo, { x: (W - logoGenislik) / 2, y: y(0.255), width: logoGenislik, height: logoYukseklik });
-  ortalaYaz(sayfa, normal, 'Eskişehir Teknik Üniversitesi  ·  Uçak ve Uzay Kulübü', 10.5, 0.295);
+  const ustSatir = 'Eskişehir Teknik Üniversitesi';
+  const altSatir = 'Aeronautics and Aerospace';
+  const ustBoyut = 15;
+  const altBoyut = 12;
+  const bosluk = 14;
+  const yaziGenislik = universiteAdi
+    ? Math.max(kalin.widthOfTextAtSize(ustSatir, ustBoyut), normal.widthOfTextAtSize(altSatir, altBoyut)) + bosluk
+    : 0;
+  const logoX = (W - (logoGenislik + yaziGenislik)) / 2;
+  const logoAlt = y(0.255);
+  sayfa.drawImage(logo, { x: logoX, y: logoAlt, width: logoGenislik, height: logoYukseklik });
+  const yaziX = logoX + logoGenislik + bosluk;
+  const orta = logoAlt + logoYukseklik / 2;
+  if (universiteAdi) {
+    // İki satır, logonun dikey ortasına hizalı
+    sayfa.drawText(ustSatir, { x: yaziX, y: orta + 3, size: ustBoyut, font: kalin, color: SIYAH });
+    sayfa.drawText(altSatir, { x: yaziX, y: orta - 14, size: altBoyut, font: normal, color: GRI });
+  } else {
+    // Sade tasarım: logonun altında kulübün adı
+    ortalaYaz(sayfa, normal, 'Eskişehir Teknik Üniversitesi  ·  Uçak ve Uzay Kulübü', 10.5, 0.295);
+  }
 
   // Sertifika türü
   aralikliYaz(sayfa, kalin, baslik, 27, 0.43, 6.5);
@@ -76,6 +96,11 @@ async function sablonUret(dosya: string, baslik: string) {
   console.log(dosya, 'tamam');
 }
 
-await sablonUret('kurucu-uye.pdf', 'KURUCU ÜYE');
-await sablonUret('katilim.pdf', 'KATILIM SERTİFİKASI');
-await sablonUret('koordinasyon.pdf', 'KOORDİNASYON SERTİFİKASI');
+for (const [ad, baslik] of [
+  ['kurucu-uye', 'KURUCU ÜYE'],
+  ['katilim', 'KATILIM SERTİFİKASI'],
+  ['koordinasyon', 'KOORDİNASYON SERTİFİKASI'],
+] as const) {
+  await sablonUret(`${ad}.pdf`, baslik, true); // üniversite adıyla
+  await sablonUret(`${ad}-sade.pdf`, baslik, false); // sade
+}

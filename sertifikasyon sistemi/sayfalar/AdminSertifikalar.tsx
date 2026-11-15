@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import {
   Award,
-  Ban,
   ChevronDown,
   ChevronUp,
   Download,
@@ -12,7 +11,7 @@ import {
   FileUp,
   Loader2,
   Mail,
-  RotateCcw,
+  Trash2,
   TriangleAlert,
 } from 'lucide-react';
 import { db } from '@/lib/firebase/client';
@@ -284,7 +283,7 @@ export default function AdminSertifikalar() {
 
   const mailGonder = async (grup: GrupKaydi) => {
     const tekrar = grup.sentAt ? 'Bu grubun mailleri daha önce gönderildi. Katılımcılar maili İKİNCİ KEZ alacak.\n\n' : '';
-    if (!confirm(`${tekrar}"${grup.eventName}" sertifikaları ${grup.count} katılımcıya mail ile gönderilsin mi? (İptal edilenlere gönderilmez.) Gönderilen mail geri alınamaz.`)) return;
+    if (!confirm(`${tekrar}"${grup.eventName}" sertifikaları ${grup.count} katılımcıya mail ile gönderilsin mi? Gönderilen mail geri alınamaz.`)) return;
     setMesgul(grup.id);
     setMesaj(null);
     try {
@@ -304,22 +303,36 @@ export default function AdminSertifikalar() {
     }
   };
 
-  const iptalDegistir = async (s: GrupSertifikasi) => {
-    const iptal = s.status !== 'revoked';
-    if (iptal && !confirm(`${s.name} adına verilen sertifika iptal edilsin mi? Doğrulama sayfasında "iptal edildi" görünecek.`)) return;
+  // Sertifikayı kalıcı olarak siler (PDF depodan, kayıt veritabanından)
+  const sertifikaSil = async (s: GrupSertifikasi) => {
+    if (
+      !confirm(
+        `${s.name} adına verilen sertifika (${s.id}) KALICI olarak silinsin mi?
+
+PDF depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem geri alınamaz.`
+      )
+    )
+      return;
     setMesgul(s.id);
     try {
-      const yanit = await adminFetch('/api/admin/certificates/revoke', {
+      const yanit = await adminFetch('/api/admin/certificates/delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: s.id, revoked: iptal }),
+        body: JSON.stringify({ id: s.id }),
       });
-      if (!yanit.ok) throw new Error();
-      setGrupSertifikalari((liste) =>
-        liste.map((x) => (x.id === s.id ? { ...x, status: iptal ? 'revoked' : 'valid' } : x))
-      );
-    } catch {
-      setMesaj({ tur: 'hata', metin: 'İşlem başarısız.' });
+      const veri = await yanit.json().catch(() => ({}));
+      if (!yanit.ok) throw new Error(veri.error || 'Silme başarısız.');
+      setGrupSertifikalari((liste) => liste.filter((x) => x.id !== s.id));
+      if (veri.grupSilindi) setAcikGrup(null);
+      await gruplariYukle();
+      setMesaj({
+        tur: 'basari',
+        metin: veri.grupSilindi
+          ? `${s.name} adına verilen sertifika silindi. Grupta başka sertifika kalmadığı için grup da silindi.`
+          : `${s.name} adına verilen sertifika silindi.`,
+      });
+    } catch (hata) {
+      setMesaj({ tur: 'hata', metin: hata instanceof Error ? hata.message : 'Silme başarısız.' });
     } finally {
       setMesgul(null);
     }
@@ -562,9 +575,15 @@ export default function AdminSertifikalar() {
                                   </a>
                                 </td>
                                 <td className="px-4 py-2 text-right">
-                                  <Button variant="ghost" size="sm" onClick={() => iptalDegistir(s)} disabled={mesgul === s.id}>
-                                    {s.status === 'revoked' ? <RotateCcw className="mr-1 h-4 w-4" /> : <Ban className="mr-1 h-4 w-4" />}
-                                    {s.status === 'revoked' ? 'Geri al' : 'İptal et'}
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => sertifikaSil(s)}
+                                    disabled={mesgul === s.id}
+                                    className="text-red-600 hover:text-red-700"
+                                  >
+                                    {mesgul === s.id ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Trash2 className="mr-1 h-4 w-4" />}
+                                    Sil
                                   </Button>
                                 </td>
                               </tr>

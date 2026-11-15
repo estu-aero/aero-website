@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
           etkinlik: veri.eventName,
           tarih: veri.date,
           kimlik: d.id,
-          pdfUrl: veri.pdfUrl,
+          sablon: veri.template,
         });
         return {
           from: EMAIL_FROM,
