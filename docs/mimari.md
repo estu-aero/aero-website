@@ -20,8 +20,8 @@
 | `certificate_events` | Sertifika grupları | Admin okur |
 | `certificate_emails` | Sertifika sahiplerinin e-postaları | Admin okur |
 
-Tanımlanmayan her koleksiyon kapalıdır (`firestore.rules`). Dosyalar (dergi PDF'leri, kapaklar,
-sertifikalar) Vercel Blob'da tahmin edilemeyen adreslerle tutulur.
+Tanımlanmayan her koleksiyon kapalıdır (`firestore.rules`). Dosyalar (etkinlik görselleri, dergi PDF'leri,
+kapaklar, sertifikalar) Vercel Blob'da tahmin edilemeyen adreslerle tutulur.
 
 ## Sunucu uçları
 | Uç | Erişim | Görev |
@@ -30,7 +30,7 @@ sertifikalar) Vercel Blob'da tahmin edilemeyen adreslerle tutulur.
 | `POST /api/newsletter/campaign` | Admin | Abonelere duyuru maili |
 | `GET, DELETE /api/admin/newsletter` | Admin | Abone listesi, abone silme |
 | `POST /api/admin/session` | Giriş yapmış kullanıcı | Admin listesinde mi kontrolü, admin yetkisinin verilmesi |
-| `POST /api/upload` | Admin | Etkinlik/blog görseli (dosya imzası, klasör listesi, 5 MB) |
+| `POST /api/upload` | Admin | Etkinlik/blog görseli → Vercel Blob (dosya imzası, klasör listesi, 4 MB) |
 | `POST, DELETE /api/admin/magazine/upload` | Admin | Dergi dosyası yükleme izni, silme |
 | `POST /api/admin/magazine/announce` | Admin | Dergi sayısını abonelere duyurma |
 | `GET /api/certificates/verify` | Herkes (hız sınırı) | Sertifika doğrulama |

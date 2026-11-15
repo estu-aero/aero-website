@@ -71,7 +71,7 @@ export default function CreateEventPage() {
         date: formData.date,
         time: formData.time,
         status: formData.status,
-        image: imageUrl || '/images/placeholder-event.jpg',
+        image: imageUrl || '',
         registrationUrl: formData.registrationUrl || null,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),

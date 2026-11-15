@@ -14,7 +14,6 @@ Anahtar değerleri yalnızca `.env.local` dosyasına ve Vercel ayarlarına giril
 | `RESEND_API_KEY`, `RESEND_FROM` | Resend → API Keys; gönderen adres alan adı doğrulandıktan sonra |
 | `NEXT_PUBLIC_WEB3FORMS_KEY` | web3forms.com → kulüp e-postasıyla Access Key |
 | `BLOB_READ_WRITE_TOKEN` | Vercel → Storage → Blob deposu (projeye bağlanınca otomatik eklenir) |
-| `GITHUB_TOKEN`, `GITHUB_REPO_OWNER`, `GITHUB_REPO_NAME`, `GITHUB_BRANCH` | Admin panelinden etkinlik/blog görseli yükleme için; sadece bu depoya "Contents: Read and write" yetkili fine-grained token |
 
 `FIREBASE_PRIVATE_KEY` tırnak içinde, tek satırda yazılır (satır sonları `\n` olarak kalır).
 

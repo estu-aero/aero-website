@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { resend, isResendConfigured, EMAIL_FROM } from '@/lib/resend';
 import { requireAdmin } from '@/lib/auth/require-admin';
 
+const BATCH_SIZE = 100;
+
 const campaignSchema = z.object({
   emails: z.array(z.email()).min(1).max(1000),
   subject: z.string().trim().min(1).max(200),
@@ -31,16 +33,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const results = await Promise.allSettled(
-      emails.map((email) =>
-        resend!.emails.send({ from: EMAIL_FROM, to: [email], subject, html })
-      )
-    );
-
-    // Resend hata durumunda reddetmez, { error } döndürür
-    const successful = results.filter(
-      (r) => r.status === 'fulfilled' && !r.value.error
-    ).length;
+    // Resend tek istekte en fazla 100 mail kabul eder; partiler sırayla gönderilir (hız sınırı)
+    let successful = 0;
+    for (let i = 0; i < emails.length; i += BATCH_SIZE) {
+      const batch = emails.slice(i, i + BATCH_SIZE).map((email) => ({
+        from: EMAIL_FROM,
+        to: [email],
+        subject,
+        html,
+      }));
+      const { error } = await resend.batch.send(batch);
+      if (error) {
+        console.error('Newsletter campaign batch error:', error);
+      } else {
+        successful += batch.length;
+      }
+    }
 
     return NextResponse.json({
       success: true,

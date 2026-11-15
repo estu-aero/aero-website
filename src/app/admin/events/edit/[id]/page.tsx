@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/client';
 import { Button } from '@/components/ui/button';
@@ -27,7 +27,9 @@ interface EventFormData {
   statusLabel: { tr: string; en: string };
 }
 
-export default function EditEventPage({ params }: { params: { id: string } }) {
+export default function EditEventPage() {
+  // Next 16'da sayfa parametreleri istemci bileşeninde useParams ile okunur
+  const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -47,11 +49,11 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     loadEvent();
-  }, [params.id]);
+  }, [id]);
 
   const loadEvent = async () => {
     try {
-      const docRef = doc(db, 'events', params.id);
+      const docRef = doc(db, 'events', id);
       const docSnap = await getDoc(docRef);
       
       if (docSnap.exists()) {
@@ -88,7 +90,7 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
 
     setSaving(true);
     try {
-      const docRef = doc(db, 'events', params.id);
+      const docRef = doc(db, 'events', id);
       await updateDoc(docRef, {
         ...formData,
         updatedAt: serverTimestamp(),

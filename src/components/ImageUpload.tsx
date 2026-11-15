@@ -18,7 +18,7 @@ interface ImageUploadProps {
 export function ImageUpload({
   onUploadComplete,
   folder = 'general',
-  maxSize = 5,
+  maxSize = 4,
   acceptedFormats = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
   currentImageUrl,
 }: ImageUploadProps) {

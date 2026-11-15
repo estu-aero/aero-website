@@ -113,12 +113,19 @@ export default function EventsPage() {
     return (
       <Card className="group hover:shadow-xl dark:hover:shadow-brand/20 dark:hover:ring-1 dark:hover:ring-brand/50 transition-all duration-300 rounded-2xl border-0 bg-white dark:bg-slate-950 hover:bg-white dark:hover:bg-slate-970 overflow-hidden hover:-translate-y-1 h-full flex flex-col">
         <div className="relative h-56 w-full overflow-hidden">
-            <Image
-              src={event.image}
-              alt={event.title[locale]}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-            />
+            {event.image ? (
+              <Image
+                src={event.image}
+                alt={event.title[locale]}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            ) : (
+              // Kapak görseli yoksa marka renginde alan
+              <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-brand to-neutral-950 text-3xl font-bold tracking-[0.3em] text-white/90">
+                AERO
+              </div>
+            )}
           <div className="absolute top-4 right-4">
             <Badge
               className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(event.statusLabel[locale])}`}

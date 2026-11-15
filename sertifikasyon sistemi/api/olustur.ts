@@ -4,6 +4,7 @@ import { put } from '@vercel/blob';
 import { FieldValue } from 'firebase-admin/firestore';
 import { adminDb } from '@/lib/firebase/admin';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import { SITE } from '@/config/site';
 import { sablonBul, PARTI_BOYUTU } from '../ayarlar';
 import { kimlikUret } from '../lib/kimlik';
 import { sertifikaUret, sablonVarMi } from '../lib/pdf-uret';
@@ -34,6 +35,14 @@ const istekSemasi = z.object({
 export async function POST(request: NextRequest) {
   const admin = await requireAdmin(request);
   if (!admin.ok) return admin.response;
+
+  // Sertifikaya doğrulama adresi basılır ve sonradan değiştirilemez; alan adı girilmeden üretim yapılmaz
+  if (SITE.url.includes('example.com')) {
+    return NextResponse.json(
+      { error: 'Sitenin alan adı henüz ayarlanmadı (src/config/site.ts → url). Sertifikalar alan adı girildikten sonra oluşturulabilir.' },
+      { status: 400 }
+    );
+  }
 
   const ayrisma = istekSemasi.safeParse(await request.json().catch(() => null));
   if (!ayrisma.success) {
