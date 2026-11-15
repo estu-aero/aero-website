@@ -28,7 +28,7 @@ export const SITE = {
     linkedin: 'https://www.linkedin.com/company/estu-aero/',
   },
   // TODO: alan adı belli olunca güncellenecek
-  url: 'https://example.com',
+  url: 'https://estuaero.com',
   city: 'Eskişehir',
   // Sitenin en son gezildiği dili tutan anahtar (tarayıcı oturumu). Sertifika doğrulama sayfası
   // her zaman İngilizce açılır; oradan siteye dönünce bu dil kullanılır.
