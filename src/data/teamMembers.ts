@@ -24,7 +24,7 @@ export const teamMembers: TeamMemberData[] = [
   // Yönetim Kurulu (5 kişi)
   {
     tr: { name: 'Ozan Narin', position: 'Başkan', department: 'Uçak Mühendisliği' },
-    en: { name: 'Ozan Narin', position: 'President', department: 'Aircraft Engineering' },
+    en: { name: 'Ozan Narin', position: 'President', department: 'Aeronautical Engineering' },
     sinif: 2,
     linkedin: 'https://www.linkedin.com/in/ozan-narin-6444ba32b/',
     email: 'ozannarin@ogr.eskisehir.edu.tr',
@@ -51,7 +51,7 @@ export const teamMembers: TeamMemberData[] = [
   },
   {
     tr: { name: 'Yiğit Ergeç', position: 'Sayman', department: 'Uçak Mühendisliği' },
-    en: { name: 'Yiğit Ergeç', position: 'Treasurer', department: 'Aircraft Engineering' },
+    en: { name: 'Yiğit Ergeç', position: 'Treasurer', department: 'Aeronautical Engineering' },
     sinif: 2,
     linkedin: 'https://www.linkedin.com/in/yiğit-ergeç-445331331/',
     email: 'yigit_ergec@ogr.eskisehir.edu.tr',
@@ -79,7 +79,7 @@ export const teamMembers: TeamMemberData[] = [
   },
   {
     tr: { name: 'Melih Karabulut', position: 'Tanıtım ve Tasarım Koordinatörü', department: 'Uçak Mühendisliği' },
-    en: { name: 'Melih Karabulut', position: 'Promotion & Design Coordinator', department: 'Aircraft Engineering' },
+    en: { name: 'Melih Karabulut', position: 'Promotion & Design Coordinator', department: 'Aeronautical Engineering' },
     sinif: 2,
     linkedin: 'https://www.linkedin.com/in/melih-karabulut-a52649425/',
     email: 'melihkarabulut@ogr.eskisehir.edu.tr',
@@ -97,7 +97,7 @@ export const teamMembers: TeamMemberData[] = [
   },
   {
     tr: { name: 'Ceyda Yılmaz', position: 'Sosyal Ekip Koordinatörü', department: 'Uçak Mühendisliği' },
-    en: { name: 'Ceyda Yılmaz', position: 'Social Team Coordinator', department: 'Aircraft Engineering' },
+    en: { name: 'Ceyda Yılmaz', position: 'Social Team Coordinator', department: 'Aeronautical Engineering' },
     sinif: 2,
     linkedin: 'https://www.linkedin.com/in/ceyda-yılmaz-b79835389/',
     email: 'ceyda@ogr.eskisehir.edu.tr',
@@ -115,7 +115,7 @@ export const teamMembers: TeamMemberData[] = [
   },
   {
     tr: { name: 'Şevval Sarıöz', position: 'Basın ve Yayın Koordinatörü', department: 'Uçak Mühendisliği' },
-    en: { name: 'Şevval Sarıöz', position: 'Press & Media Coordinator', department: 'Aircraft Engineering' },
+    en: { name: 'Şevval Sarıöz', position: 'Press & Media Coordinator', department: 'Aeronautical Engineering' },
     sinif: 1,
     linkedin: 'https://www.linkedin.com/in/şevval-sariöz-259503393/',
     email: 'sevval_sarioz@ogr.eskisehir.edu.tr',
@@ -143,7 +143,7 @@ export const teamMembers: TeamMemberData[] = [
   },
   {
     tr: { name: 'Efe Aral', position: 'Denetim Kurulu Üyesi', department: 'Uçak Mühendisliği' },
-    en: { name: 'Efe Aral', position: 'Audit Board Member', department: 'Aircraft Engineering' },
+    en: { name: 'Efe Aral', position: 'Audit Board Member', department: 'Aeronautical Engineering' },
     sinif: 2,
     linkedin: 'https://www.linkedin.com/in/efe-aral-94537a33b/',
     email: 'earal@ogr.eskisehir.edu.tr',
