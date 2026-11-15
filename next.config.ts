@@ -13,7 +13,7 @@ const csp = [
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://js.hcaptcha.com https://*.hcaptcha.com`,
   "style-src 'self' 'unsafe-inline' https://*.hcaptcha.com",
   // Admin panelinden yüklenen görseller, dergi kapakları ve sertifikalar Vercel Blob'dan sunulur
-  "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://firebasestorage.googleapis.com https://images.unsplash.com",
+  "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com",
   "font-src 'self' data:",
   // Firebase (giriş + veritabanı), Web3Forms (iletişim formu), hCaptcha, Vercel Blob (dergi PDF'leri)
   "connect-src 'self' https://*.public.blob.vercel-storage.com https://vercel.com https://*.vercel-storage.com https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://api.web3forms.com https://*.hcaptcha.com",
@@ -48,14 +48,6 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'firebasestorage.googleapis.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
       {
         protocol: 'https',
         hostname: '**.public.blob.vercel-storage.com',

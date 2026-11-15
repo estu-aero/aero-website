@@ -47,3 +47,4 @@ next-env.d.ts
 
 # ekip fotoğraflarının orijinalleri (kişisel veri; siteye kırpılmış halleri girer)
 /Fotograflar
+/fotograflar

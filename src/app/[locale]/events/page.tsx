@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, Clock, MapPin, Users, ExternalLink, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { buildLocalizedPath, ENGLISH_ROUTES } from '@/i18n/paths';
+import { gecerliDurum } from '@/lib/events';
 import { type LocaleKey } from '@/data/events';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase/client';
@@ -57,8 +57,9 @@ export default function EventsPage() {
     loadEvents();
   }, []);
 
-  const upcomingEvents = events.filter((event) => event.status === 'upcoming');
-  const pastEvents = events.filter((event) => event.status === 'past');
+  // Tarihi geçen etkinlik, admin durumu değiştirmese de "geçmiş" sayılır
+  const upcomingEvents = events.filter((event) => gecerliDurum(event) === 'upcoming');
+  const pastEvents = events.filter((event) => gecerliDurum(event) === 'past');
 
   const getCategoryColor = (category: string) => {
     const categoryKey = category.toLowerCase().replace(/\s+/g, '');
@@ -109,6 +110,13 @@ export default function EventsPage() {
     showApply?: boolean;
   }) => {
     const eventPath = `/${locale}/events/${event.slug}`;
+    // Durumu elle "geçmiş" yapılmamış ama tarihi geçmiş etkinlikte etiket "Tamamlandı" olur
+    const durumEtiketi =
+      event.status !== 'past' && gecerliDurum(event) === 'past'
+        ? locale === 'tr'
+          ? 'Tamamlandı'
+          : 'Completed'
+        : event.statusLabel[locale];
 
     return (
       <Card className="group hover:shadow-xl dark:hover:shadow-brand/20 dark:hover:ring-1 dark:hover:ring-brand/50 transition-all duration-300 rounded-2xl border-0 bg-white dark:bg-slate-950 hover:bg-white dark:hover:bg-slate-970 overflow-hidden hover:-translate-y-1 h-full flex flex-col">
@@ -140,10 +148,10 @@ export default function EventsPage() {
             )}
           <div className="absolute top-4 right-4">
             <Badge
-              className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(event.statusLabel[locale])}`}
-              style={getStatusStyle(event.statusLabel[locale])}
+              className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(durumEtiketi)}`}
+              style={getStatusStyle(durumEtiketi)}
             >
-              {event.statusLabel[locale]}
+              {durumEtiketi}
             </Badge>
           </div>
           <div className="absolute top-4 left-4">
@@ -277,7 +285,7 @@ export default function EventsPage() {
                 <h3 className="text-2xl font-bold mb-4 text-white">
                   {t('newsletter.title')}
                 </h3>
-                <p className="text-blue-50 mb-6 max-w-2xl mx-auto">
+                <p className="text-white/90 mb-6 max-w-2xl mx-auto">
                   {t('newsletter.description')}
                 </p>
                 <Button

@@ -23,7 +23,6 @@ export function Footer() {
     
     // Honeypot check - if filled, it's a bot
     if (honeypot) {
-      console.log('Bot detected via honeypot');
       return;
     }
     

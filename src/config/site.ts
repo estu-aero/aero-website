@@ -27,7 +27,7 @@ export const SITE = {
     instagram: 'https://www.instagram.com/estu_aero/',
     linkedin: 'https://www.linkedin.com/company/estu-aero/',
   },
-  // TODO: alan adı belli olunca güncellenecek
+  // Sitenin adresi: sertifikalara ve maillere basılır; değişirse eski bağlantılar çalışmaz
   url: 'https://estuaero.com',
   city: 'Eskişehir',
   // Sitenin en son gezildiği dili tutan anahtar (tarayıcı oturumu). Sertifika doğrulama sayfası

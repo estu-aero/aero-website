@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
-import { Ban, Check, CircleCheck, Copy, Download, Loader2, Moon, SearchX, ShieldCheck, Sun } from 'lucide-react';
+import { Check, CircleCheck, Copy, Download, Loader2, Moon, SearchX, ShieldCheck, Sun } from 'lucide-react';
 import { SITE } from '@/config/site';
 import { buildLocalizedPath, ENGLISH_ROUTES } from '@/i18n/paths';
 import { kimlikTemizle } from '../lib/kimlik';
@@ -21,7 +21,7 @@ type Bulunan = {
   eventName: string;
   eventNameEn: string;
   date: string;
-  status: 'valid' | 'revoked';
+  status: 'valid';
   pdfUrl: string | null;
 };
 type Sonuc = Bulunan | { tur: 'hata'; anahtar: 'notFound' | 'invalidId' | 'tooMany' | 'error' };
@@ -209,23 +209,13 @@ export default function DogrulamaSayfasi() {
 
               {sonuc?.tur === 'bulundu' && (
                 <div className="mt-8">
-                  {sonuc.status === 'valid' ? (
-                    <div className="flex gap-3 rounded-sm border border-green-300 bg-green-50 px-5 py-4 dark:border-green-800 dark:bg-green-950/60">
+                                      <div className="flex gap-3 rounded-sm border border-green-300 bg-green-50 px-5 py-4 dark:border-green-800 dark:bg-green-950/60">
                       <CircleCheck className="mt-0.5 h-6 w-6 shrink-0 text-green-600 dark:text-green-400" />
                       <div>
                         <p className="text-lg font-semibold text-green-700 dark:text-green-400">{t('validTitle')}</p>
                         <p className="text-green-700 dark:text-green-400/90">{t('validText')}</p>
                       </div>
                     </div>
-                  ) : (
-                    <div className="flex gap-3 rounded-sm border border-red-300 bg-red-50 px-5 py-4 dark:border-red-900 dark:bg-red-950/60">
-                      <Ban className="mt-0.5 h-6 w-6 shrink-0 text-red-600 dark:text-red-400" />
-                      <div>
-                        <p className="text-lg font-semibold text-red-700 dark:text-red-400">{t('revokedTitle')}</p>
-                        <p className="text-red-700 dark:text-red-400/90">{t('revokedText')}</p>
-                      </div>
-                    </div>
-                  )}
 
                   <dl className="mt-6 grid grid-cols-[auto_1fr] gap-x-8 gap-y-3 text-lg">
                     <dt className="text-muted-foreground">{t('name')}</dt>
@@ -238,7 +228,7 @@ export default function DogrulamaSayfasi() {
                     <dd className="self-center break-all font-mono text-base">{sonuc.id}</dd>
                   </dl>
 
-                  {sonuc.status === 'valid' && sonuc.pdfUrl && (
+                  {sonuc.pdfUrl && (
                     <div className="mt-7 flex flex-wrap gap-3">
                       <a
                         href={indirmeAdresi(sonuc.pdfUrl)}

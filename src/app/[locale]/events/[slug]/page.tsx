@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { gecerliDurum } from '@/lib/events';
 import { useParams } from 'next/navigation';
 import { SiteLayout } from '@/components/layout/SiteLayout';
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, Clock, MapPin, Users, ArrowLeft, Loader2 } from 'lucide-react';
@@ -153,7 +153,7 @@ export default function EventDetailPage() {
                 )}
               </div>
 
-              {event.registrationUrl && event.status === 'upcoming' && (
+              {event.registrationUrl && gecerliDurum(event) === 'upcoming' && (
                 <Button
                   className="w-full bg-green-600 hover:bg-green-700 text-white rounded-xl"
                   size="lg"

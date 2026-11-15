@@ -8,7 +8,6 @@ import {
   SheetContent,
   SheetTrigger,
   SheetTitle,
-  SheetDescription,
 } from '@/components/ui/sheet';
 import { Menu, Moon, Sun, Languages } from 'lucide-react';
 import Image from 'next/image';

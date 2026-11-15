@@ -32,13 +32,19 @@ type FormData = {
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
-// Add hcaptcha to window type
+type HCaptcha = { reset: (widgetId?: string) => void };
+
+// hCaptcha'nın pencereye eklediği nesneler
 declare global {
   interface Window {
-    hcaptcha: any;
-    onCaptchaSuccess: (token: string) => void;
+    hcaptcha?: HCaptcha;
+    onCaptchaSuccess?: (token: string) => void;
   }
 }
+
+// Web3Forms anahtarı girilmemişse form gösterilmez; ziyaretçi e-posta adresine yönlendirilir
+const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || '';
+const FORM_ACIK = Boolean(WEB3FORMS_KEY);
 
 export default function ContactPage() {
   const t = useTranslations('contact');
@@ -46,7 +52,7 @@ export default function ContactPage() {
   const [formStatus, setFormStatus] = useState<FormStatus>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [hcaptchaToken, setHcaptchaToken] = useState('');
-  const hcaptchaRef = useRef<any>(null);
+  const hcaptchaRef = useRef<HCaptcha | null>(null);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -74,13 +80,13 @@ export default function ContactPage() {
     });
 
     // Set up hCaptcha callback
-    (window as any).onCaptchaSuccess = (token: string) => {
+    window.onCaptchaSuccess = (token: string) => {
       setHcaptchaToken(token);
     };
 
     return () => {
       observer.disconnect();
-      delete (window as any).onCaptchaSuccess;
+      delete window.onCaptchaSuccess;
     };
   }, []);
 
@@ -104,15 +110,14 @@ export default function ContactPage() {
     // Check hCaptcha token
     if (!hcaptchaToken) {
       setFormStatus('error');
-      setErrorMessage('Lütfen reCAPTCHA doğrulamasını tamamlayın');
+      setErrorMessage(t('form.captchaRequired'));
       return;
     }
 
     // Honeypot check - if filled, it's a bot
     if (formData.honeypot) {
-      console.log('Bot detected via honeypot');
       setFormStatus('error');
-      setErrorMessage('Invalid submission');
+      setErrorMessage(t('form.errorMessage'));
       return;
     }
 
@@ -158,7 +163,7 @@ export default function ContactPage() {
           Accept: 'application/json',
         },
         body: JSON.stringify({
-          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY || 'YOUR_ACCESS_KEY_HERE',
+          access_key: WEB3FORMS_KEY,
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
@@ -193,7 +198,7 @@ export default function ContactPage() {
         // Reset success message after 5 seconds
         setTimeout(() => setFormStatus('idle'), 5000);
       } else {
-        throw new Error(data.message || 'Form submission failed');
+        throw new Error(t('form.errorMessage'));
       }
     } catch (error) {
       setFormStatus('error');
@@ -353,6 +358,17 @@ export default function ContactPage() {
                     </div>
                   )}
 
+                  {!FORM_ACIK && (
+                    <div className="rounded-xl border border-border bg-muted/40 p-6 text-center">
+                      <Mail className="mx-auto mb-3 h-8 w-8 text-brand" />
+                      <p className="mb-4 text-sm text-muted-foreground">{t('form.unavailable')}</p>
+                      <Button asChild className="rounded-xl text-white" style={{ backgroundColor: 'var(--brand)' }}>
+                        <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+                      </Button>
+                    </div>
+                  )}
+
+                  {FORM_ACIK && (
                   <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Honeypot field - hidden from users, visible to bots */}
                     <input
@@ -530,6 +546,7 @@ export default function ContactPage() {
                       )}
                     </Button>
                   </form>
+                  )}
                 </CardContent>
               </Card>
             </div>

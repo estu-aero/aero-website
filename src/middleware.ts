@@ -87,6 +87,8 @@ export default function middleware(request: NextRequest) {
     const internalPath = toInternalPath(pathname, suffixLocale);
     const headers = new Headers(request.headers);
     headers.set('x-next-intl-locale', suffixLocale);
+    // Sayfanın açık adresi (ör. /about); canonical ve dil alternatifleri için layout okur
+    headers.set('x-aero-path', basePath);
     const rewriteUrl = new URL(request.url);
     rewriteUrl.pathname = internalPath;
     return NextResponse.rewrite(rewriteUrl, { request: { headers } });

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { put } from '@vercel/blob';
+import { put, del } from '@vercel/blob';
 import { FieldValue } from 'firebase-admin/firestore';
 import { adminDb } from '@/lib/firebase/admin';
 import { requireAdmin } from '@/lib/auth/require-admin';
@@ -50,6 +50,10 @@ export async function POST(request: NextRequest) {
   }
   const { participants } = ayrisma.data;
 
+  // Hata olursa temizlik için: bu istekte açılan grup ve oluşan sertifika sayısı
+  let yeniGrupId: string | null = null;
+  let olusanSayisi = 0;
+
   try {
     // Grup: yoksa oluştur, varsa oku (metin ve şablon gruptan alınır, her partide aynı kalır)
     let eventId = ayrisma.data.eventId;
@@ -90,6 +94,7 @@ export async function POST(request: NextRequest) {
         createdBy: admin.user.email ?? '',
       });
       eventId = yeni.id;
+      yeniGrupId = yeni.id;
     }
 
     const olusanlar: { id: string; name: string; email: string; pdfUrl: string }[] = [];
@@ -134,7 +139,14 @@ export async function POST(request: NextRequest) {
       yazim.update(adminDb.collection(GRUP_KOLEKSIYONU).doc(eventId), {
         count: FieldValue.increment(1),
       });
-      await yazim.commit();
+      try {
+        await yazim.commit();
+      } catch (hata) {
+        // Kayıt yazılamadıysa az önce yüklenen PDF depoda sahipsiz kalmasın
+        await del(dosya.url).catch(() => {});
+        throw hata;
+      }
+      olusanSayisi += 1;
 
       olusanlar.push({ id: kimlik, name: katilimci.name, email: katilimci.email, pdfUrl: dosya.url });
     }
@@ -142,6 +154,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ eventId, created: olusanlar });
   } catch (hata) {
     console.error('Certificate generate error:', hata);
+    // Bu istekte açılan grupta hiç sertifika oluşmadıysa boş grup bırakılmaz
+    if (yeniGrupId && olusanSayisi === 0) {
+      await adminDb.collection(GRUP_KOLEKSIYONU).doc(yeniGrupId).delete().catch(() => {});
+    }
     return NextResponse.json(
       { error: 'Sertifikalar oluşturulamadı. Depolama (Vercel Blob) ve veritabanı ayarlarını kontrol edin.' },
       { status: 500 }

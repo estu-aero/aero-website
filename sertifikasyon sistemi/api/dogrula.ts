@@ -33,9 +33,8 @@ export async function GET(request: NextRequest) {
       eventName: veri.eventName,
       eventNameEn: veri.eventNameEn || '',
       date: veri.date,
-      status: veri.status === 'revoked' ? 'revoked' : 'valid',
-      // İptal edilmiş sertifikanın dosyası gösterilmez
-      pdfUrl: veri.status === 'revoked' ? null : veri.pdfUrl,
+      status: 'valid',
+      pdfUrl: veri.pdfUrl,
     });
   } catch (hata) {
     console.error('Certificate verify error:', hata);

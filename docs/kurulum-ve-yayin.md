@@ -27,6 +27,8 @@ Anahtar değerleri yalnızca `.env.local` dosyasına ve Vercel ayarlarına giril
 
 Admin çıkarmak için: e-postayı `ADMIN_EMAILS`'ten silin **ve** Firebase'de kullanıcıyı silin veya devre dışı bırakın.
 
+Listeyi değiştirdikten sonra Vercel'de yeniden deploy gerekir. Listeden çıkarılan kişinin veritabanı yetkisi, kalan adminlerden biri paneli açtığında otomatik geri alınır ve oturumu kapatılır; açık kalmış bir tarayıcı oturumu en geç 1 saat içinde düşer. En güvenlisi yine de hesabı Firebase'den silmektir.
+
 ## 3. Resend (bülten, dergi duyurusu, sertifika mailleri)
 1. Hesap açın, API anahtarı oluşturun.
 2. **Alan adını doğrulayın** (Domains → DNS kayıtları). Doğrulanmadan sadece hesap sahibinin
@@ -54,5 +56,5 @@ Formdan gönderilen mesajlar bu adrese gelir.
 - [ ] Bülten: abonelik, hoş geldin maili, admin panelinde listeleme
 - [ ] İletişim formu: mesaj kulüp e-postasına geliyor
 - [ ] Dergi: PDF yükleme, kapak, yayınlama, abonelere duyuru
-- [ ] Sertifika: oluşturma, mail, doğrulama sayfası, iptal
+- [ ] Sertifika: oluşturma, mail, doğrulama sayfası, silme
 - [ ] Mobil ve koyu tema görünümü, tüm menü bağlantıları

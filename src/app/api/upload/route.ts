@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { put } from '@vercel/blob';
+import { put, del } from '@vercel/blob';
 import { requireAdmin } from '@/lib/auth/require-admin';
 
 // Yüklemeye izin verilen klasörler (Vercel Blob içinde <klasör>/dosya)
@@ -94,5 +94,42 @@ export async function POST(request: NextRequest) {
       { error: 'Yükleme başarısız. Depolama (Vercel Blob) ayarlı mı?' },
       { status: 500 }
     );
+  }
+}
+
+// Yüklenmiş görselleri depodan siler (etkinlik silinince veya görseli değişince). Sadece adminler çağırabilir.
+export async function DELETE(request: NextRequest) {
+  try {
+    const admin = await requireAdmin(request);
+    if (!admin.ok) return admin.response;
+
+    const body = await request.json().catch(() => null);
+    const urls: unknown = body?.urls;
+    if (!Array.isArray(urls) || urls.length === 0 || urls.length > 10) {
+      return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+    }
+
+    // Sadece bu API'nin yüklediği klasörlerdeki dosyalar silinebilir
+    const valid = urls.every((value) => {
+      try {
+        const url = new URL(String(value));
+        return (
+          url.protocol === 'https:' &&
+          url.hostname.endsWith('.public.blob.vercel-storage.com') &&
+          ALLOWED_FOLDERS.some((folder) => url.pathname.startsWith(`/${folder}/`))
+        );
+      } catch {
+        return false;
+      }
+    });
+    if (!valid) {
+      return NextResponse.json({ error: 'Invalid file url' }, { status: 400 });
+    }
+
+    await del(urls as string[]);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Upload delete error:', error);
+    return NextResponse.json({ error: 'Silme başarısız.' }, { status: 500 });
   }
 }

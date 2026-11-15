@@ -11,7 +11,6 @@ import {
   LayoutDashboard,
   Calendar,
   FileText,
-  Image as ImageIcon,
   LogOut,
   Menu,
   Mail,

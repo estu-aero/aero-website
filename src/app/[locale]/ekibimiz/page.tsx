@@ -15,8 +15,6 @@ import { Linkedin, Mail } from 'lucide-react';
 import { MEMBERSHIP_FORM_URL } from '@/config/links';
 import Image from 'next/image';
 import { useState } from 'react';
-import Link from 'next/link';
-import { buildLocalizedPath, ENGLISH_ROUTES } from '@/i18n/paths';
 
 export default function TeamPage() {
   const t = useTranslations('team');

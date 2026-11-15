@@ -12,7 +12,7 @@ kurulum, betik çalıştırma veya kod bilgisi gerekmez.
 5. Listeyi kontrol edin, **Mail gönder** ile herkese sertifikasını iletin.
 
 Katılımcıya giden mailde sertifika bağlantısı, doğrulama kimliği ve "LinkedIn'e Ekle" butonu vardır.
-Hatalı verilen bir sertifika listeden **İptal et** ile iptal edilir (silinmez, doğrulamada "iptal" görünür).
+Hatalı verilen bir sertifika listeden **Sil** ile kalıcı olarak silinir: PDF depodan, kayıt veritabanından kalkar ve doğrulama sayfasında "bulunamadı" görünür. Bir gruptaki son sertifika silinince grup da silinir. Bu işlem geri alınamaz.
 
 ## Doğrulama
 - Adres: `/certificate` (varsayılan dil İngilizce; sağ üstteki dil butonuyla Türkçe)
@@ -27,7 +27,7 @@ Hatalı verilen bir sertifika listeden **İptal et** ile iptal edilir (silinmez,
 | `ayarlar.ts` | Şablon listesi, yazıların konumu ve boyutu, otomatik metinler |
 | `fontlar/` | Sertifikaya basılan yazıların fontu (Liberation Sans, açık lisans) |
 | `lib/` | PDF üretimi, doğrulama kimliği, mail şablonu |
-| `api/` | Sunucu işlemleri (oluştur, önizle, gönder, iptal, doğrula) |
+| `api/` | Sunucu işlemleri (oluştur, önizle, gönder, sil, doğrula) |
 | `sayfalar/` | Doğrulama sayfası ve admin sayfası |
 | `mesajlar/` | Doğrulama sayfasının Türkçe ve İngilizce metinleri |
 

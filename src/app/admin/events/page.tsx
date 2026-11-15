@@ -16,12 +16,14 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, Loader2, Mail, Calendar as CalendarIcon } from 'lucide-react';
-import { adminFetch } from '@/lib/admin-fetch';
+import { adminFetch, gorselSil } from '@/lib/admin-fetch';
+import { etkinlikGectiMi } from '@/lib/events';
 import Link from 'next/link';
 
 interface Event {
   id: string;
   slug: string;
+  image?: string;
   title: { tr: string; en: string };
   date: string;
   status: 'upcoming' | 'past';
@@ -87,7 +89,10 @@ export default function AdminEventsPage() {
 
     setDeleting(eventId);
     try {
+      const silinen = events.find((e) => e.id === eventId);
       await deleteDoc(doc(db, 'events', eventId));
+      // Etkinliğin görseli de depodan (Vercel Blob) silinir
+      await gorselSil(silinen?.image);
       setEvents(events.filter(e => e.id !== eventId));
     } catch (error) {
       console.error('Error deleting event:', error);
@@ -173,6 +178,9 @@ export default function AdminEventsPage() {
                     >
                       {event.statusLabel.tr}
                     </Badge>
+                    {event.status === 'upcoming' && etkinlikGectiMi(event.date) && (
+                      <p className="mt-1 text-xs text-muted-foreground">Tarihi geçti: sitede geçmiş etkinliklerde görünür</p>
+                    )}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">

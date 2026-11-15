@@ -1,6 +1,5 @@
 import { initializeApp, getApps, cert, App } from 'firebase-admin/app';
 import { getFirestore, Firestore } from 'firebase-admin/firestore';
-import { getStorage, Storage } from 'firebase-admin/storage';
 import { getAuth, Auth } from 'firebase-admin/auth';
 
 // Uygulama ilk kullanımda başlatılır. Böylece build ve yerel önizleme
@@ -30,5 +29,4 @@ function lazy<T extends object>(create: () => T): T {
 }
 
 export const adminDb: Firestore = lazy(() => getFirestore(getAdminApp()));
-export const adminStorage: Storage = lazy(() => getStorage(getAdminApp()));
 export const adminAuth: Auth = lazy(() => getAuth(getAdminApp()));

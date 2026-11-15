@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/client';
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Loader2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { ImageUpload } from '@/components/ImageUpload';
+import { gorselSil } from '@/lib/admin-fetch';
 
 interface EventFormData {
   title: { tr: string; en: string };
@@ -47,6 +48,9 @@ export default function EditEventPage() {
     statusLabel: { tr: 'Yaklaşan', en: 'Upcoming' },
   });
 
+  // Etkinliğin kayıtlı görseli: kaydedilirken değiştiyse eskisi depodan silinir
+  const ilkGorsel = useRef('');
+
   useEffect(() => {
     loadEvent();
   }, [id]);
@@ -58,6 +62,7 @@ export default function EditEventPage() {
       
       if (docSnap.exists()) {
         const data = docSnap.data() as EventFormData;
+        ilkGorsel.current = data.image || '';
         setFormData(data);
       } else {
         alert('Etkinlik bulunamadı');
@@ -95,6 +100,9 @@ export default function EditEventPage() {
         ...formData,
         updatedAt: serverTimestamp(),
       });
+      if (ilkGorsel.current && ilkGorsel.current !== formData.image) {
+        await gorselSil(ilkGorsel.current);
+      }
 
       alert('Etkinlik başarıyla güncellendi!');
       router.push('/admin/events');
@@ -106,7 +114,7 @@ export default function EditEventPage() {
     }
   };
 
-  const handleImageUpload = (url: string, path: string) => {
+  const handleImageUpload = (url: string) => {
     setFormData({ ...formData, image: url });
   };
 

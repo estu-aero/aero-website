@@ -174,7 +174,9 @@
       "privacyRequired": "Lütfen gizlilik politikasını kabul edin.",
       "defaultSubject": "İletişim Formu Mesajı",
       "rateLimitError": "Çok fazla istek gönderdiniz. Lütfen birkaç dakika bekleyin.",
-      "disposableEmailError": "Geçici email adresleri kabul edilmemektedir."
+      "disposableEmailError": "Geçici email adresleri kabul edilmemektedir.",
+      "captchaRequired": "Lütfen \"Ben insanım\" doğrulamasını tamamlayın.",
+      "unavailable": "İletişim formu şu anda kullanılamıyor. Bize e-posta ile ulaşabilirsiniz:"
     }
   },
   "blog": {
@@ -312,7 +314,7 @@
           "paragraphs": [
             "İletişim formu mesajları, talebiniz sonuçlandıktan sonra en fazla 2 yıl saklanır.",
             "Bülten aboneliği verileri, abonelikten çıkana kadar saklanır; çıktığınızda silinir.",
-            "Sertifika kayıtları, doğrulanabilmeleri için süresiz saklanır. Sertifikanızın silinmesini veya iptal edilmesini talep edebilirsiniz."
+            "Sertifika kayıtları, doğrulanabilmeleri için süresiz saklanır. Sertifikanızın silinmesini talep edebilirsiniz."
           ]
         },
         {

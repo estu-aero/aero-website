@@ -11,8 +11,6 @@
     "verifying": "Doğrulanıyor...",
     "validTitle": "Geçerli sertifika",
     "validText": "Bu sertifika ESTÜ Uçak ve Uzay Kulübü tarafından verilmiştir.",
-    "revokedTitle": "İptal edilmiş sertifika",
-    "revokedText": "Bu sertifika ESTÜ Uçak ve Uzay Kulübü tarafından verilmiş, ancak daha sonra iptal edilmiştir ve artık geçerli değildir.",
     "name": "Ad Soyad",
     "event": "Etkinlik",
     "date": "Veriliş Tarihi",

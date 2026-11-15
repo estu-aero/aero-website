@@ -11,8 +11,6 @@
     "verifying": "Verifying...",
     "validTitle": "Valid certificate",
     "validText": "This certificate was issued by the ESTU Aeronautics and Aerospace Club.",
-    "revokedTitle": "Revoked certificate",
-    "revokedText": "This certificate was issued by the ESTU Aeronautics and Aerospace Club but has since been revoked and is no longer valid.",
     "name": "Name Surname",
     "event": "Event",
     "date": "Issued Date",

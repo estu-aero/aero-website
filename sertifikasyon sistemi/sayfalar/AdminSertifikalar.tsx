@@ -21,7 +21,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { PARTI_BOYUTU, EN_FAZLA_KATILIMCI } from '../ayarlar';
 import { dogrulamaAdresi, tarihYaz } from '../lib/mail';
 import {
@@ -566,7 +565,6 @@ PDF depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem 
                               <tr key={s.id} className="border-t">
                                 <td className="px-4 py-2">
                                   {s.name}
-                                  {s.status === 'revoked' && <Badge className="ml-2 bg-brand text-white">İptal</Badge>}
                                 </td>
                                 <td className="px-4 py-2 text-muted-foreground">{s.email}</td>
                                 <td className="px-4 py-2 font-mono text-xs">

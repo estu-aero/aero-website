@@ -3,9 +3,9 @@
 import { useState, useRef, ChangeEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Upload, X, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { Upload, X, Loader2 } from 'lucide-react';
 import Image from 'next/image';
-import { adminFetch } from '@/lib/admin-fetch';
+import { adminFetch, gorselSil } from '@/lib/admin-fetch';
 
 interface ImageUploadProps {
   onUploadComplete?: (url: string, path: string) => void;
@@ -26,6 +26,8 @@ export function ImageUpload({
   const [preview, setPreview] = useState<string | null>(currentImageUrl || null);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // Bu oturumda yüklenen ama henüz kaydedilmemiş görsel; yenisi yüklenir veya kaldırılırsa depodan silinir
+  const oturumYuklemesi = useRef<string | null>(null);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -53,7 +55,7 @@ export function ImageUpload({
     };
     reader.readAsDataURL(file);
 
-    // Upload to GitHub
+    // Vercel Blob'a yükle
     setIsUploading(true);
     try {
       const formData = new FormData();
@@ -71,8 +73,10 @@ export function ImageUpload({
         throw new Error(data.error || 'Upload failed');
       }
 
-      if (onUploadComplete && data.url) {
-        onUploadComplete(data.url, data.path);
+      if (data.url) {
+        await gorselSil(oturumYuklemesi.current);
+        oturumYuklemesi.current = data.url;
+        onUploadComplete?.(data.url, data.path);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Yükleme başarısız');
@@ -85,6 +89,10 @@ export function ImageUpload({
   const handleRemove = () => {
     setPreview(null);
     setError(null);
+    // Kaydedilmemiş yükleme depodan silinir; formdaki görsel alanı da boşaltılır
+    void gorselSil(oturumYuklemesi.current);
+    oturumYuklemesi.current = null;
+    onUploadComplete?.('', '');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -152,7 +160,7 @@ export function ImageUpload({
               <div className="flex items-center gap-2 mt-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 <p className="text-sm text-muted-foreground">
-                  GitHub repo&apos;ya yükleniyor...
+                  Yükleniyor...
                 </p>
               </div>
             )}
@@ -167,7 +175,7 @@ export function ImageUpload({
       )}
 
       <p className="text-xs text-muted-foreground">
-        💡 Görsel direkt olarak GitHub repo&apos;nuza commit edilecek
+        Görsel sitenin deposuna (Vercel Blob) yüklenir.
       </p>
     </div>
   );

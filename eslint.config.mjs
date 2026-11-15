@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // pdf.js çalışanı (üçüncü taraf, küçültülmüş dosya)
+    "public/pdf.worker.min.mjs",
   ]),
 ]);
 

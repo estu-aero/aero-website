@@ -14,7 +14,7 @@ const istekSemasi = z.object({
   eventId: z.string().min(1).max(64).regex(/^[A-Za-z0-9_-]+$/),
 });
 
-// Bir gruptaki (iptal edilmemiş) tüm sertifikaları sahiplerine mail ile gönderir.
+// Bir gruptaki tüm sertifikaları sahiplerine mail ile gönderir.
 export async function POST(request: NextRequest) {
   const admin = await requireAdmin(request);
   if (!admin.ok) return admin.response;
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     const epostaHaritasi = new Map(epostalar.docs.map((d) => [d.id, d.data().email as string]));
 
     const mailler = sertifikalar.docs
-      .filter((d) => d.data().status !== 'revoked' && epostaHaritasi.has(d.id))
+      .filter((d) => epostaHaritasi.has(d.id))
       .map((d) => {
         const veri = d.data();
         const mail = sertifikaMaili({

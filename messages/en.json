@@ -174,7 +174,9 @@
       "privacyRequired": "Please accept the privacy policy.",
       "defaultSubject": "Contact Form Message",
       "rateLimitError": "Too many requests. Please wait a few minutes.",
-      "disposableEmailError": "Disposable email addresses are not accepted."
+      "disposableEmailError": "Disposable email addresses are not accepted.",
+      "captchaRequired": "Please complete the \"I am human\" verification.",
+      "unavailable": "The contact form is currently unavailable. You can reach us by email:"
     }
   },
   "blog": {
@@ -312,7 +314,7 @@
           "paragraphs": [
             "Contact form messages are kept for up to 2 years after your request is resolved.",
             "Newsletter subscription data is kept until you unsubscribe, and deleted when you do.",
-            "Certificate records are kept indefinitely so they remain verifiable. You may request that your certificate be deleted or revoked."
+            "Certificate records are kept indefinitely so they remain verifiable. You may request that your certificate be deleted."
           ]
         },
         {

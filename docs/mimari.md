@@ -34,7 +34,7 @@ kapaklar, sertifikalar) Vercel Blob'da tahmin edilemeyen adreslerle tutulur.
 | `POST, DELETE /api/admin/magazine/upload` | Admin | Dergi dosyası yükleme izni, silme |
 | `POST /api/admin/magazine/announce` | Admin | Dergi sayısını abonelere duyurma |
 | `GET /api/certificates/verify` | Herkes (hız sınırı) | Sertifika doğrulama |
-| `/api/admin/certificates/*` | Admin | Sertifika oluşturma, önizleme, gönderme, iptal |
+| `/api/admin/certificates/*` | Admin | Sertifika oluşturma, önizleme, gönderme, silme |
 
 ## Güvenlik önlemleri
 - **Admin kontrolü:** her admin ucu Firebase kimliğini doğrular ve e-postanın `ADMIN_EMAILS`

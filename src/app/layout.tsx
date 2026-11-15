@@ -23,13 +23,6 @@ export const metadata: Metadata = {
   description: siteDescription,
   applicationName: SITE.shortName,
   metadataBase: new URL(siteUrl),
-  alternates: {
-    canonical: "/",
-    languages: {
-      tr: "/tr",
-      en: "/en",
-    },
-  },
   keywords: [
     "AERO",
     "AERO ESTÜ",
@@ -93,7 +86,14 @@ export default async function RootLayout({
     "@context": "https://schema.org",
     "@type": "Organization",
     name: SITE.fullName.tr,
-    alternateName: [SITE.shortName, SITE.fullName.en],
+    // Google'ın "estu aero" gibi aramaları kulüple eşleştirmesi için alternatif isimler
+    alternateName: [
+      SITE.shortName,
+      'ESTÜ AERO',
+      'ESTU AERO',
+      'Eskişehir Teknik Üniversitesi Uçak ve Uzay Kulübü',
+      SITE.fullName.en,
+    ],
     url: siteUrl,
     logo: `${siteUrl}${logoPath}`,
     sameAs: Object.values(SITE.social).filter(Boolean),

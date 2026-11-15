@@ -17,7 +17,7 @@ export interface SertifikaKaydi {
   pdfUrl: string;
   eventId: string;
   template: string;
-  status: 'valid' | 'revoked';
+  status: 'valid';
 }
 
 export interface GrupKaydi {
