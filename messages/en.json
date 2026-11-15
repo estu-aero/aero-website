@@ -91,6 +91,7 @@
     "departmentLabel": "Department",
     "yearLabel": "Year",
     "year": "Year {year}",
+    "prep": "Preparatory Year",
     "noInfo": "No information has been added for this person yet.",
     "close": "Close"
   },

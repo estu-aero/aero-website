@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { FieldValue } from 'firebase-admin/firestore';
 import { adminDb } from '@/lib/firebase/admin';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import { bultenAlanlari } from '@/lib/unsubscribe';
 import {
   resend,
   isResendConfigured,
@@ -61,7 +62,7 @@ export async function POST(request: NextRequest) {
           from: EMAIL_FROM,
           to: [data.email as string],
           subject: template.subject,
-          html: template.html,
+          ...bultenAlanlari(template.html, data.email as string, data.locale === 'en' ? 'en' : 'tr'),
         };
       });
 

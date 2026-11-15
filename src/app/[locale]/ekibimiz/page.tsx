@@ -194,10 +194,10 @@ export default function TeamPage() {
         <DialogContent className="sm:max-w-md" closeLabel={t('close')}>
           {secilen && (
             <div className="text-center">
-              <div className="mx-auto mb-5 h-28 w-28 overflow-hidden rounded-2xl bg-linear-to-br from-slate-200 to-slate-100 p-1 dark:from-slate-700 dark:to-slate-600">
+              <div className={`mx-auto mb-5 overflow-hidden rounded-2xl ${secilen.image ? 'h-56 w-56 sm:h-64 sm:w-64' : 'h-28 w-28'} bg-linear-to-br from-slate-200 to-slate-100 p-1 dark:from-slate-700 dark:to-slate-600`}>
                 <div className="relative h-full w-full overflow-hidden rounded-xl">
                   {secilen.image ? (
-                    <Image src={secilen.image} alt={secilen[locale].name} fill sizes="112px" className="object-cover" />
+                    <Image src={secilen.image} alt={secilen[locale].name} fill sizes="256px" className="object-cover" />
                   ) : (
                     <div
                       className="flex h-full w-full items-center justify-center text-3xl font-bold text-white"
@@ -227,7 +227,7 @@ export default function TeamPage() {
                   {secilen.sinif && (
                     <>
                       <dt className="text-sm text-muted-foreground">{t('yearLabel')}</dt>
-                      <dd className="text-sm font-semibold text-primary">{t('year', { year: secilen.sinif })}</dd>
+                      <dd className="text-sm font-semibold text-primary">{secilen.sinif === 'hazirlik' ? t('prep') : t('year', { year: secilen.sinif })}</dd>
                     </>
                   )}
                 </dl>

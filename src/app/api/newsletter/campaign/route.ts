@@ -2,8 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { resend, isResendConfigured, EMAIL_FROM } from '@/lib/resend';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import { bultenAlanlari } from '@/lib/unsubscribe';
+import { SITE } from '@/config/site';
 
 const BATCH_SIZE = 100;
+
+// Her duyurunun altına eklenen satır; mailto bağlantısı gönderimde kişisel çıkış bağlantısıyla değişir
+const CIKIS_SATIRI = `<p style="margin-top:32px;font-size:12px;color:#9CA3AF;text-align:center">${SITE.fullName.tr} · Bu e-postaları almak istemiyorsanız <a href="mailto:${SITE.email}?subject=abonelik" style="color:#B0182A">abonelikten çıkın</a>.</p>`;
 
 const campaignSchema = z.object({
   emails: z.array(z.email()).min(1).max(1000),
@@ -40,7 +45,7 @@ export async function POST(request: NextRequest) {
         from: EMAIL_FROM,
         to: [email],
         subject,
-        html,
+        ...bultenAlanlari(html + CIKIS_SATIRI, email, 'tr'),
       }));
       const { error } = await resend.batch.send(batch);
       if (error) {

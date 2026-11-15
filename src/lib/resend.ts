@@ -21,16 +21,16 @@ const COPY = {
     intro: `${SITE.fullName.tr} bültenine abone olduğunuz için teşekkür ederiz! Etkinliklerimiz, eğitimlerimiz ve duyurularımız artık doğrudan size ulaşacak.`,
     expectTitle: 'Neler Bekleyebilirsiniz?',
     expect: [
-      'Sektör buluşmaları ve seminer duyuruları',
-      'Teknik yazılım eğitimleri',
-      'Proje takımı ve yarışma fırsatları',
-      'Teknik gezi duyuruları',
+      'Havacılık ve uzay alanında seminer ve söyleşi duyuruları',
+      'Atölye çalışmaları ve teknik eğitimler',
+      'Proje ve yarışma fırsatları',
+      'Teknik gezi ve sektör buluşması duyuruları',
     ],
     visit: 'Web Sitemizi Ziyaret Edin',
     follow: 'Sosyal medyada takip edin:',
     rights: 'Tüm hakları saklıdır.',
-    unsubscribe: 'Bu e-postayı almak istemiyorsanız, lütfen',
-    unsubscribeLink: 'bizimle iletişime geçin',
+    unsubscribe: 'Bu e-postaları almak istemiyorsanız',
+    unsubscribeLink: 'abonelikten çıkın',
     unsubscribeSubject: 'Bülten Aboneliğinden Çık',
   },
   en: {
@@ -40,16 +40,16 @@ const COPY = {
     intro: `Thank you for subscribing to the ${SITE.fullName.en} newsletter! Our events, training and announcements will now come straight to you.`,
     expectTitle: 'What to Expect',
     expect: [
-      'Industry meetups and seminar announcements',
-      'Technical software training',
-      'Project team and competition opportunities',
-      'Technical trip announcements',
+      'Aviation and space seminars and talks',
+      'Workshops and technical training',
+      'Project and competition opportunities',
+      'Technical trips and industry meetups',
     ],
     visit: 'Visit Our Website',
     follow: 'Follow us on social media:',
     rights: 'All rights reserved.',
-    unsubscribe: 'If you no longer wish to receive these emails, please',
-    unsubscribeLink: 'contact us',
+    unsubscribe: 'If you no longer wish to receive these emails,',
+    unsubscribeLink: 'unsubscribe',
     unsubscribeSubject: 'Unsubscribe from Newsletter',
   },
 } as const;
@@ -122,8 +122,8 @@ const MAGAZINE_COPY = {
     heading: 'Yeni sayımız yayında',
     read: 'Dergiyi Oku',
     rights: 'Tüm hakları saklıdır.',
-    unsubscribe: 'Bu e-postayı almak istemiyorsanız, lütfen',
-    unsubscribeLink: 'bizimle iletişime geçin',
+    unsubscribe: 'Bu e-postaları almak istemiyorsanız',
+    unsubscribeLink: 'abonelikten çıkın',
     unsubscribeSubject: 'Bülten Aboneliğinden Çık',
   },
   en: {
@@ -131,8 +131,8 @@ const MAGAZINE_COPY = {
     heading: 'Our new issue is out',
     read: 'Read the Magazine',
     rights: 'All rights reserved.',
-    unsubscribe: 'If you no longer wish to receive these emails, please',
-    unsubscribeLink: 'contact us',
+    unsubscribe: 'If you no longer wish to receive these emails,',
+    unsubscribeLink: 'unsubscribe',
     unsubscribeSubject: 'Unsubscribe from Newsletter',
   },
 } as const;
@@ -176,6 +176,97 @@ export const getMagazineEmailTemplate = (
             <h2 style="color: ${BRAND}; margin: 24px 0 12px 0;">${title}</h2>
             ${issue.description ? `<p style="margin: 0 0 24px 0;">${escapeHtml(issue.description)}</p>` : ''}
             <a href="${link}" style="display: inline-block; background: linear-gradient(to right, ${BRAND}, ${BRAND_DARK}); color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600;">${c.read}</a>
+          </div>
+
+          <div style="text-align: center; padding: 20px; font-size: 12px; color: #9CA3AF;">
+            <p>© ${new Date().getFullYear()} ${SITE.fullName[lang]}. ${c.rights}</p>
+            <p style="margin-top: 10px;">
+              ${c.unsubscribe} <a href="mailto:${SITE.email}?subject=${encodeURIComponent(c.unsubscribeSubject)}" style="color: ${BRAND};">${c.unsubscribeLink}</a>.
+            </p>
+          </div>
+        </body>
+      </html>
+    `,
+  };
+};
+
+const EVENT_COPY = {
+  tr: {
+    subject: (title: string) => `Yeni etkinlik: ${title}`,
+    heading: 'Yeni bir etkinliğimiz var',
+    when: 'Tarih',
+    where: 'Yer',
+    details: 'Etkinliği İncele',
+    register: 'Kayıt Ol',
+    rights: 'Tüm hakları saklıdır.',
+    unsubscribe: 'Bu e-postaları almak istemiyorsanız',
+    unsubscribeLink: 'abonelikten çıkın',
+    unsubscribeSubject: 'Bülten Aboneliğinden Çık',
+  },
+  en: {
+    subject: (title: string) => `New event: ${title}`,
+    heading: 'We have a new event',
+    when: 'Date',
+    where: 'Location',
+    details: 'View Event',
+    register: 'Register',
+    rights: 'All rights reserved.',
+    unsubscribe: 'If you no longer wish to receive these emails,',
+    unsubscribeLink: 'unsubscribe',
+    unsubscribeSubject: 'Unsubscribe from Newsletter',
+  },
+} as const;
+
+// Yeni etkinlik duyurusu
+export const getEventEmailTemplate = (
+  locale: string,
+  event: {
+    slug: string;
+    title: string;
+    description: string;
+    location: string;
+    date: string; // YYYY-AA-GG
+    time: string; // SS:DD
+    imageUrl: string;
+    registrationUrl: string;
+  }
+) => {
+  const lang = locale === 'en' ? 'en' : 'tr';
+  const c = EVENT_COPY[lang];
+  const link = `${SITE.url}/events/${encodeURIComponent(event.slug)}/${lang}`;
+  const tarih = (() => {
+    const d = new Date(`${event.date}T00:00:00`);
+    if (Number.isNaN(d.getTime())) return event.date;
+    const metin = new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
+    return event.time ? `${metin}, ${event.time}` : metin;
+  })();
+  const kayit = /^https?:\/\//.test(event.registrationUrl) ? event.registrationUrl : '';
+
+  return {
+    subject: c.subject(event.title),
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: #0a0a0a; padding: 30px 20px; text-align: center; border-radius: 10px 10px 0 0; border-bottom: 4px solid ${BRAND};">
+            <h1 style="color: white; margin: 0; font-size: 26px; letter-spacing: 2px;">${SITE.shortName}</h1>
+            <p style="color: #d4d4d4; margin: 8px 0 0 0;">${c.heading}</p>
+          </div>
+
+          <div style="background: white; padding: 32px 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
+            ${event.imageUrl ? `<img src="${escapeHtml(event.imageUrl)}" alt="" width="540" style="max-width: 100%; border-radius: 6px; margin-bottom: 20px;">` : ''}
+            <h2 style="color: ${BRAND}; margin: 0 0 16px 0;">${escapeHtml(event.title)}</h2>
+            <p style="margin: 0 0 6px 0;"><strong>${c.when}:</strong> ${escapeHtml(tarih)}</p>
+            ${event.location ? `<p style="margin: 0 0 16px 0;"><strong>${c.where}:</strong> ${escapeHtml(event.location)}</p>` : ''}
+            ${event.description ? `<p style="margin: 0 0 24px 0;">${escapeHtml(event.description)}</p>` : ''}
+            <div style="text-align: center;">
+              <a href="${link}" style="display: inline-block; background: linear-gradient(to right, ${BRAND}, ${BRAND_DARK}); color: white; padding: 12px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 4px;">${c.details}</a>
+              ${kayit ? `<a href="${escapeHtml(kayit)}" style="display: inline-block; border: 2px solid ${BRAND}; color: ${BRAND}; padding: 10px 26px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 4px;">${c.register}</a>` : ''}
+            </div>
           </div>
 
           <div style="text-align: center; padding: 20px; font-size: 12px; color: #9CA3AF;">

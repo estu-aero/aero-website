@@ -15,7 +15,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Pencil, Trash2, Loader2, Calendar as CalendarIcon } from 'lucide-react';
+import { Plus, Pencil, Trash2, Loader2, Mail, Calendar as CalendarIcon } from 'lucide-react';
+import { adminFetch } from '@/lib/admin-fetch';
 import Link from 'next/link';
 
 interface Event {
@@ -26,6 +27,8 @@ interface Event {
   status: 'upcoming' | 'past';
   statusLabel: { tr: string; en: string };
   category: { tr: string; en: string };
+  announcedAt?: { toDate: () => Date } | null;
+  announcedCount?: number;
 }
 
 export default function AdminEventsPage() {
@@ -50,6 +53,32 @@ export default function AdminEventsPage() {
       console.error('Error loading events:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const [announcing, setAnnouncing] = useState<string | null>(null);
+
+  // Etkinliği bülten abonelerine mail ile duyurur
+  const handleAnnounce = async (event: Event) => {
+    const tekrar = event.announcedAt
+      ? 'Bu etkinlik daha önce duyuruldu. Aboneler maili İKİNCİ KEZ alacak.\n\n'
+      : '';
+    if (!confirm(tekrar + '"' + event.title.tr + '" tüm bülten abonelerine mail ile duyurulsun mu? Gönderilen mail geri alınamaz.')) return;
+    setAnnouncing(event.id);
+    try {
+      const response = await adminFetch('/api/admin/events/announce', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: event.id }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.success) throw new Error(data.error || 'Duyuru gönderilemedi.');
+      alert('Duyuru gönderildi: ' + data.sent + '/' + data.total + ' aboneye ulaştı.');
+      await loadEvents();
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Duyuru gönderilemedi.');
+    } finally {
+      setAnnouncing(null);
     }
   };
 
@@ -147,6 +176,23 @@ export default function AdminEventsPage() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleAnnounce(event)}
+                        disabled={announcing === event.id}
+                        title={
+                          event.announcedAt
+                            ? 'Abonelere duyuruldu: ' + event.announcedAt.toDate().toLocaleDateString('tr-TR')
+                            : 'Abonelere duyur'
+                        }
+                      >
+                        {announcing === event.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Mail className={event.announcedAt ? 'h-4 w-4 text-green-600' : 'h-4 w-4'} />
+                        )}
+                      </Button>
                       <Link href={`/admin/events/edit/${event.id}`}>
                         <Button variant="ghost" size="icon">
                           <Pencil className="h-4 w-4" />

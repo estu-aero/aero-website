@@ -4,6 +4,7 @@ import { adminDb } from '@/lib/firebase/admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { resend, getWelcomeEmailTemplate, isResendConfigured, EMAIL_FROM } from '@/lib/resend';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
+import { bultenAlanlari } from '@/lib/unsubscribe';
 
 const subscribeSchema = z.object({
   email: z.email().max(254),
@@ -59,7 +60,7 @@ export async function POST(request: NextRequest) {
           from: EMAIL_FROM,
           to: [normalizedEmail],
           subject: template.subject,
-          html: template.html,
+          ...bultenAlanlari(template.html, normalizedEmail, locale),
         });
 
         if (error) {

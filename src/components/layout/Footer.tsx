@@ -180,7 +180,7 @@ export function Footer() {
                   {locale === 'tr' ? 'Bülten' : 'Newsletter'}
                 </h3>
               </div>
-              <form onSubmit={handleSubscribe} className="flex flex-col gap-2">
+              <form id="newsletter" onSubmit={handleSubscribe} className="flex flex-col gap-2 scroll-mt-24">
                 {/* Honeypot field - hidden from users, visible to bots */}
                 <input
                   type="text"
@@ -192,6 +192,7 @@ export function Footer() {
                   autoComplete="off"
                 />
                 <Input
+                  id="newsletter-email"
                   type="email"
                   placeholder={locale === 'tr' ? 'Email adresiniz' : 'Your email'}
                   value={email}

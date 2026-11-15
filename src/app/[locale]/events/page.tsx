@@ -272,6 +272,11 @@ export default function EventsPage() {
                   size="lg"
                   className="bg-white hover:bg-gray-50 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl hover:shadow-brand/30 dark:hover:shadow-brand/50 hover:ring-2 hover:ring-brand/40 dark:hover:ring-brand/60 hover:-translate-y-0.5 transition-all duration-300"
                   style={{ color: 'var(--brand)' }}
+                  onClick={() => {
+                    // Footer'daki bülten formuna kaydır ve e-posta kutusuna odaklan
+                    document.getElementById('newsletter')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => document.getElementById('newsletter-email')?.focus({ preventScroll: true }), 500);
+                  }}
                 >
                   {t('newsletter.button')}
                 </Button>
