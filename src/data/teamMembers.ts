@@ -20,7 +20,6 @@ export interface TeamMemberData {
   section: 'boardOfDirectors' | 'administrativeBoard' | 'auditBoard';
 }
 
-// TODO: eksik fotoğraflar gelince eklenecek
 export const teamMembers: TeamMemberData[] = [
   // Yönetim Kurulu (5 kişi)
   {
@@ -84,6 +83,7 @@ export const teamMembers: TeamMemberData[] = [
     sinif: 2,
     linkedin: 'https://www.linkedin.com/in/melih-karabulut-a52649425/',
     email: 'melihkarabulut@ogr.eskisehir.edu.tr',
+    image: '/images/team/melih-karabulut.jpg',
     section: 'administrativeBoard',
   },
   {
