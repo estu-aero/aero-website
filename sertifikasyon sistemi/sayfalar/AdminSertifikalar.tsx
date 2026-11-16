@@ -370,7 +370,16 @@ PDF depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem 
   const csvYukle = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const dosya = e.target.files?.[0];
     if (!dosya) return;
-    setListe((await dosya.text()).replace(/^﻿/, ''));
+    // Excel CSV'yi çoğu zaman Türkçe Windows kodlamasıyla (Windows-1254) kaydeder; UTF-8 olarak
+    // okununca ç, ğ, ı, ş gibi harfler bozulur. Önce UTF-8 denenir, geçersizse Windows-1254 ile okunur.
+    const baytlar = await dosya.arrayBuffer();
+    let metin: string;
+    try {
+      metin = new TextDecoder('utf-8', { fatal: true }).decode(baytlar);
+    } catch {
+      metin = new TextDecoder('windows-1254').decode(baytlar);
+    }
+    setListe(metin.replace(/^﻿/, ''));
     e.target.value = '';
   };
 
