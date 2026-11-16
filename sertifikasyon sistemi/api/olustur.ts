@@ -127,7 +127,22 @@ export async function POST(request: NextRequest) {
 
     const olusanlar: { id: string; name: string; email: string; pdfUrl: string }[] = [];
 
+    // Bu grupta sertifikası olan e-postalar: aynı kişiye aynı grupta ikinci sertifika verilmez
+    const mevcutEpostalar = new Set(
+      (await adminDb.collection(EPOSTA_KOLEKSIYONU).where('eventId', '==', eventId).get()).docs.map((d) =>
+        String(d.data().email || '').toLowerCase()
+      )
+    );
+    const atlananlar: string[] = [];
+
     for (const katilimci of participants) {
+      const eposta = katilimci.email.toLowerCase();
+      if (mevcutEpostalar.has(eposta)) {
+        atlananlar.push(katilimci.email);
+        continue;
+      }
+      mevcutEpostalar.add(eposta);
+
       // Çakışma olasılığı yok denecek kadar düşük ama yine de kontrol edilir
       let kimlik = kimlikUret();
       while ((await adminDb.collection(SERTIFIKA_KOLEKSIYONU).doc(kimlik).get()).exists) {
@@ -179,7 +194,7 @@ export async function POST(request: NextRequest) {
       olusanlar.push({ id: kimlik, name: katilimci.name, email: katilimci.email, pdfUrl: dosya.url });
     }
 
-    return NextResponse.json({ eventId, created: olusanlar });
+    return NextResponse.json({ eventId, created: olusanlar, skipped: atlananlar });
   } catch (hata) {
     console.error('Certificate generate error:', hata);
     // Bu istekte açılan grupta hiç sertifika oluşmadıysa boş grup bırakılmaz

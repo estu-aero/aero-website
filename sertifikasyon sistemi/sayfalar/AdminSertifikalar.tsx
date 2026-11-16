@@ -85,7 +85,10 @@ export default function AdminSertifikalar() {
   const [yukleniyor, setYukleniyor] = useState(true);
   const [mesaj, setMesaj] = useState<Mesaj>(null);
 
-  // Form
+  // Form. hedefGrup boşsa yeni grup açılır; doluysa katılımcılar o mevcut gruba eklenir
+  // (etkinlik adı, tarih, metin ve şablon gruptan alınır, değiştirilemez)
+  const [hedefGrup, setHedefGrup] = useState('');
+  const [hedefEpostalari, setHedefEpostalari] = useState<Set<string>>(new Set());
   const [sablonId, setSablonId] = useState('katilim');
   const [etkinlik, setEtkinlik] = useState('');
   const [etkinlikEn, setEtkinlikEn] = useState('');
@@ -102,23 +105,55 @@ export default function AdminSertifikalar() {
   const [grupSertifikalari, setGrupSertifikalari] = useState<GrupSertifikasi[]>([]);
   const [mesgul, setMesgul] = useState<string | null>(null);
 
-  const { katilimcilar, hatalar } = useMemo(() => katilimcilariOku(liste), [liste]);
+  const okunan = useMemo(() => katilimcilariOku(liste), [liste]);
   const secilenSablon = sablonlar.find((s) => s.id === sablonId);
+  const hedef = gruplar.find((g) => g.id === hedefGrup) || null;
+  // Mevcut gruba eklerken grupta zaten sertifikası olan kişiler listeden ayrılır
+  const zatenVar = hedef ? okunan.katilimcilar.filter((k) => hedefEpostalari.has(k.email)) : [];
+  const katilimcilar = hedef ? okunan.katilimcilar.filter((k) => !hedefEpostalari.has(k.email)) : okunan.katilimcilar;
+  const hatalar = okunan.hatalar;
+
+  // Mevcut grup seçilince formu o grubun bilgileriyle doldurur ve gruptaki e-postaları yükler
+  const hedefGrupSec = async (id: string) => {
+    setHedefGrup(id);
+    setHedefEpostalari(new Set());
+    const grup = gruplar.find((g) => g.id === id);
+    if (!grup) {
+      setEtkinlik('');
+      setEtkinlikEn('');
+      setTarih('');
+      setMetinElleDegisti(false);
+      return;
+    }
+    setSablonId(grup.template);
+    setEtkinlik(grup.eventName);
+    setEtkinlikEn(grup.eventNameEn || '');
+    setTarih(grup.date);
+    setMetin(grup.text);
+    setMetinElleDegisti(true);
+    try {
+      const epostalar = await getDocs(query(collection(db, EPOSTA_KOLEKSIYONU), where('eventId', '==', id)));
+      setHedefEpostalari(new Set(epostalar.docs.map((d) => String(d.data().email || '').toLowerCase())));
+    } catch (hata) {
+      console.error('Grup e-postaları yüklenemedi:', hata);
+    }
+  };
 
   // Sabit tarihli türde (ör. kurucu üye) tarih otomatik dolar
   useEffect(() => {
+    if (hedefGrup) return;
     if (secilenSablon?.sabitTarih) setTarih(secilenSablon.sabitTarih);
-  }, [secilenSablon]);
+  }, [secilenSablon, hedefGrup]);
 
   // Etkinlik adı, tarih veya şablon değişince metin otomatik doldurulur (elle değiştirilmediyse)
   useEffect(() => {
-    if (metinElleDegisti || !secilenSablon) return;
+    if (hedefGrup || metinElleDegisti || !secilenSablon) return;
     setMetin(
       secilenSablon.metinSablonu
         .replace('{tarih}', tarih ? tarihYaz(tarih) : '[tarih]')
         .replace('{etkinlik}', etkinlik.trim() || '[etkinlik adı]')
     );
-  }, [etkinlik, tarih, secilenSablon, metinElleDegisti]);
+  }, [etkinlik, tarih, secilenSablon, metinElleDegisti, hedefGrup]);
 
   const gruplariYukle = async () => {
     try {
@@ -190,16 +225,39 @@ export default function AdminSertifikalar() {
     setMesaj(null);
     const hata = formHatasi();
     if (hata) return setMesaj({ tur: 'hata', metin: hata });
-    if (katilimcilar.length === 0) return setMesaj({ tur: 'hata', metin: 'Katılımcı listesi boş.' });
+    if (katilimcilar.length === 0) {
+      return setMesaj({
+        tur: 'hata',
+        metin: zatenVar.length ? 'Listedeki herkesin bu grupta zaten sertifikası var.' : 'Katılımcı listesi boş.',
+      });
+    }
     if (hatalar.length > 0) return setMesaj({ tur: 'hata', metin: 'Önce listedeki hataları düzeltin.' });
     if (katilimcilar.length > EN_FAZLA_KATILIMCI) {
       return setMesaj({ tur: 'hata', metin: `Bir grupta en fazla ${EN_FAZLA_KATILIMCI} katılımcı olabilir.` });
     }
-    if (!confirm(`${katilimcilar.length} kişi için "${etkinlik.trim()}" sertifikası oluşturulsun mu?\n\nMail bu adımda gönderilmez; oluşturduktan sonra ayrıca "Mail gönder"e basmanız gerekir.`)) return;
+    // Yeni grup açarken aynı adlı ve aynı türde bir grup varsa uyar: çoğu zaman o gruba eklemek istenir
+    if (!hedef) {
+      const benzer = gruplar.find(
+        (g) => g.template === sablonId && g.eventName.trim().toLocaleLowerCase('tr') === etkinlik.trim().toLocaleLowerCase('tr')
+      );
+      if (
+        benzer &&
+        !confirm(
+          `"${benzer.eventName}" adıyla aynı türde bir grup zaten var (${benzer.count} sertifika).\n\nKatılımcıları o gruba eklemek için formun en üstündeki "Grup" seçiminden o grubu seçin.\n\nYine de AYRI bir yeni grup açılsın mı?`
+        )
+      ) {
+        return;
+      }
+    }
+    const soru = hedef
+      ? `${katilimcilar.length} kişi mevcut "${hedef.eventName}" grubuna eklensin mi?${zatenVar.length ? `\n(${zatenVar.length} kişinin bu grupta zaten sertifikası var, atlanacak.)` : ''}`
+      : `${katilimcilar.length} kişi için yeni "${etkinlik.trim()}" grubu açılıp sertifika oluşturulsun mu?`;
+    if (!confirm(`${soru}\n\nMail bu adımda gönderilmez; sonra grubun "Gruba mail gönder" düğmesine basmanız gerekir.`)) return;
 
     setOlusturuluyor(true);
     setIlerleme({ yapilan: 0, toplam: katilimcilar.length });
-    let eventId: string | undefined;
+    let eventId: string | undefined = hedef ? hedef.id : undefined;
+    let atlanan = 0;
     try {
       for (let i = 0; i < katilimcilar.length; i += PARTI_BOYUTU) {
         const parti = katilimcilar.slice(i, i + PARTI_BOYUTU);
@@ -224,13 +282,16 @@ export default function AdminSertifikalar() {
         const veri = await yanit.json().catch(() => ({}));
         if (!yanit.ok) throw new Error(veri.error || 'Sertifikalar oluşturulamadı.');
         eventId = veri.eventId;
+        atlanan += Array.isArray(veri.skipped) ? veri.skipped.length : 0;
         setIlerleme({ yapilan: i + parti.length, toplam: katilimcilar.length });
       }
       setMesaj({
         tur: 'basari',
-        metin: `${katilimcilar.length} sertifika oluşturuldu. Aşağıdaki listeden kontrol edip "Mail gönder" ile katılımcılara iletebilirsiniz.`,
+        metin: `${katilimcilar.length - atlanan} sertifika oluşturuldu${hedef ? ` ve "${hedef.eventName}" grubuna eklendi` : ''}.${atlanan ? ` ${atlanan} kişinin grupta zaten sertifikası olduğu için atlandı.` : ''} "Gruba mail gönder" ile yalnızca henüz mail almamış olanlara gönderebilirsiniz.`,
       });
       setListe('');
+      setHedefGrup('');
+      setHedefEpostalari(new Set());
       setEtkinlik('');
       setEtkinlikEn('');
       setTarih(secilenSablon?.sabitTarih ?? '');
@@ -312,6 +373,37 @@ export default function AdminSertifikalar() {
       await gruplariYukle();
     } catch (hata) {
       setMesaj({ tur: 'hata', metin: hata instanceof Error ? hata.message : 'Mailler gönderilemedi.' });
+    } finally {
+      setMesgul(null);
+    }
+  };
+
+  // Bir grubu bütün sertifikalarıyla kalıcı olarak siler
+  const grubuSil = async (grup: GrupKaydi) => {
+    const yazilan = prompt(
+      `"${grup.eventName}" grubundaki ${grup.count} sertifikanın TAMAMI kalıcı olarak silinecek.\n\nPDF'ler depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem geri alınamaz.\n\nOnaylamak için SİL yazın:`
+    );
+    if (yazilan === null) return;
+    if (yazilan.trim().toLocaleUpperCase('tr') !== 'SİL') {
+      setMesaj({ tur: 'hata', metin: 'Onay metni yanlış yazıldı; grup silinmedi.' });
+      return;
+    }
+    setMesgul(grup.id);
+    setMesaj(null);
+    try {
+      const yanit = await adminFetch('/api/admin/certificates/delete-group', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ eventId: grup.id }),
+      });
+      const veri = await yanit.json().catch(() => ({}));
+      if (!yanit.ok) throw new Error(veri.error || 'Grup silinemedi.');
+      if (acikGrup === grup.id) setAcikGrup(null);
+      if (hedefGrup === grup.id) await hedefGrupSec('');
+      setMesaj({ tur: 'basari', metin: `"${grup.eventName}" grubu ve ${veri.deleted ?? 0} sertifika silindi.` });
+      await gruplariYukle();
+    } catch (hata) {
+      setMesaj({ tur: 'hata', metin: hata instanceof Error ? hata.message : 'Grup silinemedi.' });
     } finally {
       setMesgul(null);
     }
@@ -429,9 +521,31 @@ PDF depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem 
 
       <Card>
         <CardHeader>
-          <CardTitle>Yeni Sertifika Grubu</CardTitle>
+          <CardTitle>Sertifika Oluştur</CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
+          <div className="space-y-2 rounded-lg border border-border bg-muted/30 p-4">
+            <Label htmlFor="hedefGrup">Grup</Label>
+            <select
+              id="hedefGrup"
+              value={hedefGrup}
+              onChange={(e) => hedefGrupSec(e.target.value)}
+              disabled={olusturuluyor}
+              className="h-9 w-full rounded-md border border-input bg-input-background px-3 text-sm"
+            >
+              <option value="">Yeni grup oluştur (yeni etkinlik)</option>
+              {gruplar.map((g) => (
+                <option key={g.id} value={g.id}>
+                  Mevcut gruba ekle: {g.eventName} · {tarihYaz(g.date)} · {sablonlar.find((s) => s.id === g.template)?.ad || g.template} · {g.count} kişi
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-muted-foreground">
+              {hedef
+                ? 'Katılımcılar seçilen gruba eklenir; etkinlik adı, tarih, metin ve sertifika türü gruptan alınır. Grupta zaten sertifikası olan e-postalar atlanır.'
+                : 'Başka bir etkinlik için her zaman yeni grup oluşturun. Var olan bir gruba sonradan kişi eklemek için listeden o grubu seçin.'}
+            </p>
+          </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="sablon">1. Sertifika türü</Label>
@@ -439,7 +553,7 @@ PDF depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem 
                 id="sablon"
                 value={sablonId}
                 onChange={(e) => setSablonId(e.target.value)}
-                disabled={olusturuluyor}
+                disabled={olusturuluyor || Boolean(hedef)}
                 className="h-9 w-full rounded-md border border-input bg-input-background px-3 text-sm"
               >
                 {sablonlar.map((s) => (
@@ -452,7 +566,7 @@ PDF depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem 
             </div>
             <div className="space-y-2">
               <Label htmlFor="tarih">2. Etkinlik tarihi</Label>
-              <Input id="tarih" type="date" value={tarih} onChange={(e) => setTarih(e.target.value)} disabled={olusturuluyor || Boolean(secilenSablon?.sabitTarih)} />
+              <Input id="tarih" type="date" value={tarih} onChange={(e) => setTarih(e.target.value)} disabled={olusturuluyor || Boolean(secilenSablon?.sabitTarih) || Boolean(hedef)} />
               {secilenSablon?.sabitTarih && (
                 <p className="text-xs text-muted-foreground">Bu sertifika türünün veriliş tarihi sabittir.</p>
               )}
@@ -462,18 +576,18 @@ PDF depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="etkinlik">3. Etkinlik adı</Label>
-              <Input id="etkinlik" placeholder="Örn: Havacılıkta Kariyer Zirvesi" value={etkinlik} onChange={(e) => setEtkinlik(e.target.value)} disabled={olusturuluyor} maxLength={150} />
+              <Input id="etkinlik" placeholder="Örn: Havacılıkta Kariyer Zirvesi" value={etkinlik} onChange={(e) => setEtkinlik(e.target.value)} disabled={olusturuluyor || Boolean(hedef)} maxLength={150} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="etkinlikEn">Etkinlik adı (İngilizce, isteğe bağlı)</Label>
-              <Input id="etkinlikEn" placeholder="Doğrulama sayfasının İngilizce sürümünde görünür" value={etkinlikEn} onChange={(e) => setEtkinlikEn(e.target.value)} disabled={olusturuluyor} maxLength={150} />
+              <Input id="etkinlikEn" placeholder="Doğrulama sayfasının İngilizce sürümünde görünür" value={etkinlikEn} onChange={(e) => setEtkinlikEn(e.target.value)} disabled={olusturuluyor || Boolean(hedef)} maxLength={150} />
             </div>
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="metin">4. Sertifika üzerindeki metin</Label>
-              {metinElleDegisti && (
+              {metinElleDegisti && !hedef && (
                 <button type="button" className="text-xs text-brand hover:underline" onClick={() => setMetinElleDegisti(false)}>
                   Otomatik metne dön
                 </button>
@@ -487,7 +601,7 @@ PDF depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem 
                 setMetin(e.target.value);
                 setMetinElleDegisti(true);
               }}
-              disabled={olusturuluyor}
+              disabled={olusturuluyor || Boolean(hedef)}
               maxLength={600}
             />
             <p className="text-xs text-muted-foreground">Her satır sertifikada ayrı satır olarak basılır.</p>
@@ -514,6 +628,9 @@ PDF depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem 
             <p className="text-xs text-muted-foreground">
               Excel&apos;den iki sütunu kopyalayıp yapıştırabilir veya &quot;full_name,mail&quot; başlıklı bir CSV dosyası yükleyebilirsiniz.
               {katilimcilar.length > 0 && <strong className="text-foreground"> {katilimcilar.length} katılımcı okundu.</strong>}
+              {zatenVar.length > 0 && (
+                <strong className="text-amber-700 dark:text-amber-300"> {zatenVar.length} kişinin bu grupta zaten sertifikası var, atlanacak.</strong>
+              )}
             </p>
             {hatalar.length > 0 && (
               <ul className="space-y-1 rounded-md bg-red-50 p-3 text-xs text-red-900 dark:bg-red-950 dark:text-red-100">
@@ -546,7 +663,7 @@ PDF depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem 
             </Button>
             <Button onClick={olustur} disabled={olusturuluyor} className="bg-brand hover:bg-brand-dark">
               {olusturuluyor ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Award className="mr-2 h-4 w-4" />}
-              Sertifikaları oluştur
+              {hedef ? 'Gruba ekle' : 'Sertifikaları oluştur'}
             </Button>
           </div>
           <p className="text-xs text-muted-foreground">
@@ -580,6 +697,7 @@ PDF depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem 
                         {grup.sentAt
                           ? `Mail gönderildi: ${grup.sentAt.toDate().toLocaleDateString('tr-TR')} (${grup.sentCount ?? 0} kişi)`
                           : 'Mail henüz gönderilmedi'}
+                        {' · "Gruba mail gönder" yalnızca henüz mail almamış katılımcılara gönderir'}
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -589,7 +707,17 @@ PDF depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem 
                       </Button>
                       <Button variant="outline" size="sm" onClick={() => mailGonder(grup)} disabled={mesgul === grup.id}>
                         {mesgul === grup.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Mail className="mr-2 h-4 w-4" />}
-                        Mail gönder
+                        Gruba mail gönder
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => grubuSil(grup)}
+                        disabled={mesgul === grup.id}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Grubu sil
                       </Button>
                     </div>
                   </div>
