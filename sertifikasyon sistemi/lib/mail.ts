@@ -20,7 +20,8 @@ export function linkedinAdresi(kimlik: string, etkinlik: string, tarih: string) 
   const parametreler = new URLSearchParams({
     startTask: 'CERTIFICATION_NAME',
     name: etkinlik,
-    organizationName: SITE.fullName.en,
+    // Kuruluş kimliğiyle eklenince sertifika kulübün LinkedIn sayfasına bağlanır (logo görünür)
+    organizationId: SITE.linkedinOrgId,
     issueYear: yil,
     issueMonth: String(Number(ay)),
     certUrl: dogrulamaAdresi(kimlik),

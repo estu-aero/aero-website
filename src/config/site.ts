@@ -27,6 +27,9 @@ export const SITE = {
     instagram: 'https://www.instagram.com/estu_aero/',
     linkedin: 'https://www.linkedin.com/company/estu-aero/',
   },
+  // LinkedIn şirket sayfasının sayısal kimliği: sertifika "LinkedIn'e Ekle" ile eklenince
+  // kuruluş bu sayfaya bağlanır ve sayfanın logosu görünür
+  linkedinOrgId: '112947361',
   // Sitenin adresi: sertifikalara ve maillere basılır; değişirse eski bağlantılar çalışmaz
   url: 'https://estuaero.com',
   city: 'Eskişehir',
