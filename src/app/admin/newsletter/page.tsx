@@ -1,6 +1,7 @@
 'use client';
 
 import { adminFetch } from '@/lib/admin-fetch';
+import { gonderimMesaji } from '@/lib/gonderim-mesaji';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -46,6 +47,8 @@ type Subscriber = {
   email: string;
   subscribedAt: string;
   locale: string;
+  // 'pending': onay bağlantısına henüz tıklamadı (duyuru almaz)
+  status: 'active' | 'pending';
 };
 
 export default function NewsletterPage() {
@@ -164,6 +167,8 @@ export default function NewsletterPage() {
     window.URL.revokeObjectURL(url);
   };
 
+  const onayliSayisi = subscribers.filter((s) => s.status !== 'pending').length;
+
   const handleSendCampaign = async () => {
     if (!campaignSubject || !campaignContent) {
       setCampaignStatus({
@@ -173,10 +178,10 @@ export default function NewsletterPage() {
       return;
     }
 
-    if (filteredSubscribers.length === 0) {
+    if (onayliSayisi === 0) {
       setCampaignStatus({
         type: 'error',
-        message: 'Gönderilecek abone bulunamadı.',
+        message: 'Onaylı abone bulunamadı.',
       });
       return;
     }
@@ -185,13 +190,10 @@ export default function NewsletterPage() {
     setCampaignStatus({ type: null, message: '' });
 
     try {
-      const emails = filteredSubscribers.map((sub) => sub.email);
-
       const response = await adminFetch('/api/newsletter/campaign', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          emails,
           subject: campaignSubject,
           html: campaignContent,
         }),
@@ -200,12 +202,12 @@ export default function NewsletterPage() {
       const data = await response.json();
 
       if (response.ok) {
-        setCampaignStatus({
-          type: 'success',
-          message: `Kampanya başarıyla gönderildi! ${data.sent}/${data.total} email gönderildi.`,
-        });
-        setCampaignSubject('');
-        setCampaignContent('');
+        setCampaignStatus({ type: 'success', message: gonderimMesaji(data) });
+        // Herkese ulaştıysa form temizlenir; kalan varsa aynı içerikle yarın devam edilebilsin diye korunur
+        if (!data.remaining) {
+          setCampaignSubject('');
+          setCampaignContent('');
+        }
       } else {
         throw new Error(data.error || 'Email gönderimi başarısız');
       }
@@ -213,7 +215,7 @@ export default function NewsletterPage() {
       console.error('Campaign error:', error);
       setCampaignStatus({
         type: 'error',
-        message: 'Kampanya gönderilirken bir hata oluştu.',
+        message: error instanceof Error ? error.message : 'Kampanya gönderilirken bir hata oluştu.',
       });
     } finally {
       setSendingCampaign(false);
@@ -233,7 +235,10 @@ export default function NewsletterPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Bülten Aboneleri</h1>
         <p className="text-muted-foreground">
-          Toplam {subscribers.length} abone
+          Toplam {subscribers.length} kayıt · {onayliSayisi} onaylı · {subscribers.length - onayliSayisi} onay bekliyor
+        </p>
+        <p className="text-sm text-muted-foreground mt-1">
+          Abone olan kişiye onay maili gider; bağlantıya tıklayana kadar duyuru almaz. Onaylanmayan kayıtlar 7 gün sonra silinir.
         </p>
       </div>
 
@@ -241,11 +246,11 @@ export default function NewsletterPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Toplam Abone</CardTitle>
+            <CardTitle className="text-sm font-medium">Onaylı Abone</CardTitle>
             <Mail className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{subscribers.length}</div>
+            <div className="text-2xl font-bold">{onayliSayisi}</div>
           </CardContent>
         </Card>
 
@@ -300,7 +305,7 @@ export default function NewsletterPage() {
             <DialogHeader>
               <DialogTitle>Email Kampanyası Gönder</DialogTitle>
               <DialogDescription>
-                {filteredSubscribers.length} aboneye email gönderilecek
+                Onaylı {onayliSayisi} aboneye gönderilir; bir seferde en fazla 100 kişi. Kalan varsa aynı konu ve içerikle tekrar gönderince yalnızca almamış olanlara gider.
               </DialogDescription>
             </DialogHeader>
 
@@ -406,6 +411,11 @@ export default function NewsletterPage() {
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand/10 text-brand dark:bg-brand/20 dark:text-red-200">
                         {subscriber.locale.toUpperCase()}
                       </span>
+                      {subscriber.status === 'pending' && (
+                        <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+                          Onay bekliyor
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button

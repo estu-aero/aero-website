@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { auth, db } from '@/lib/firebase/client';
 import { adminFetch } from '@/lib/admin-fetch';
+import { gonderimMesaji } from '@/lib/gonderim-mesaji';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -286,9 +287,9 @@ export default function AdminMagazinePage() {
 
   const handleAnnounce = async (issue: AdminIssue) => {
     const again = issue.announcedAt
-      ? 'Bu sayı daha önce duyuruldu. Aboneler aynı maili İKİNCİ KEZ alacak.\n\n'
+      ? 'Bu sayı daha önce duyuruldu. Sadece henüz almamış abonelere gönderilecek.\n\n'
       : '';
-    if (!confirm(`${again}"${issue.title}" tüm bülten abonelerine mail ile duyurulsun mu? Gönderilen mail geri alınamaz.`)) return;
+    if (!confirm(`${again}"${issue.title}" onaylı bülten abonelerine mail ile duyurulsun mu? (Bir seferde en fazla 100 kişi.) Gönderilen mail geri alınamaz.`)) return;
     setBusyId(issue.id);
     setMessage(null);
     try {
@@ -303,7 +304,7 @@ export default function AdminMagazinePage() {
       }
       setMessage({
         type: 'success',
-        text: `Duyuru gönderildi: ${data.sent}/${data.total} aboneye ulaştı.`,
+        text: gonderimMesaji(data),
       });
       await loadIssues();
     } catch (error) {

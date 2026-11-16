@@ -320,7 +320,7 @@
         {
           "title": "6. Cookies",
           "paragraphs": [
-            "This site does not use advertising or analytics cookies. Your browser's local storage only holds a timestamp used to prevent repeated form submissions. Embedded services such as hCaptcha and Google Maps may use their own cookies."
+            "This site does not use advertising or analytics cookies. Visit statistics are collected with Vercel Web Analytics, which uses no cookies and does not identify visitors; only aggregate numbers (pages viewed, country, device type, referring site) are visible. Your browser's local storage only holds a timestamp used to prevent repeated form submissions. Embedded services such as hCaptcha and Google Maps may use their own cookies."
           ]
         },
         {

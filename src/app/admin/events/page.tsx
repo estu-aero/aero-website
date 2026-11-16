@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, Loader2, Mail, Calendar as CalendarIcon } from 'lucide-react';
 import { adminFetch, gorselSil } from '@/lib/admin-fetch';
 import { etkinlikGectiMi } from '@/lib/events';
+import { gonderimMesaji } from '@/lib/gonderim-mesaji';
 import Link from 'next/link';
 
 interface Event {
@@ -62,10 +63,10 @@ export default function AdminEventsPage() {
 
   // Etkinliği bülten abonelerine mail ile duyurur
   const handleAnnounce = async (event: Event) => {
-    const tekrar = event.announcedAt
-      ? 'Bu etkinlik daha önce duyuruldu. Aboneler maili İKİNCİ KEZ alacak.\n\n'
+    const devam = event.announcedAt
+      ? 'Bu etkinlik daha önce duyuruldu. Sadece henüz almamış abonelere gönderilecek.\n\n'
       : '';
-    if (!confirm(tekrar + '"' + event.title.tr + '" tüm bülten abonelerine mail ile duyurulsun mu? Gönderilen mail geri alınamaz.')) return;
+    if (!confirm(devam + '"' + event.title.tr + '" onaylı bülten abonelerine mail ile duyurulsun mu? (Bir seferde en fazla 100 kişi.) Gönderilen mail geri alınamaz.')) return;
     setAnnouncing(event.id);
     try {
       const response = await adminFetch('/api/admin/events/announce', {
@@ -75,7 +76,7 @@ export default function AdminEventsPage() {
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok || !data.success) throw new Error(data.error || 'Duyuru gönderilemedi.');
-      alert('Duyuru gönderildi: ' + data.sent + '/' + data.total + ' aboneye ulaştı.');
+      alert(gonderimMesaji(data));
       await loadEvents();
     } catch (error) {
       alert(error instanceof Error ? error.message : 'Duyuru gönderilemedi.');

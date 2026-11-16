@@ -79,14 +79,18 @@ export function Footer() {
       // Set rate limiting timestamp
       localStorage.setItem('lastNewsletterSubscription', Date.now().toString());
 
-      setMessage(locale === 'tr' ? '✓ Başarıyla abone oldunuz!' : '✓ Successfully subscribed!');
+      setMessage(
+        locale === 'tr'
+          ? '✓ Neredeyse tamam! E-postanıza gelen bağlantıyla aboneliğinizi onaylayın.'
+          : '✓ Almost done! Confirm your subscription with the link we emailed you.'
+      );
       setEmail('');
     } catch (error) {
       console.error('Newsletter subscription error:', error);
       setMessage(locale === 'tr' ? 'Bir hata oluştu. Lütfen tekrar deneyin.' : 'An error occurred. Please try again.');
     } finally {
       setLoading(false);
-      setTimeout(() => setMessage(''), 5000);
+      setTimeout(() => setMessage(''), 10000);
     }
   };
 

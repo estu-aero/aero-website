@@ -320,7 +320,7 @@
         {
           "title": "6. Çerezler",
           "paragraphs": [
-            "Bu sitede reklam veya analiz amaçlı çerez kullanılmaz. Tarayıcınızın yerel depolama alanında yalnızca formların art arda gönderilmesini önlemeye yarayan bir zaman bilgisi tutulur. hCaptcha ve Google Haritalar gibi gömülü hizmetler kendi çerezlerini kullanabilir."
+            "Bu sitede reklam veya analiz amaçlı çerez kullanılmaz. Ziyaret istatistikleri için çerez kullanmayan ve ziyaretçiyi tanımlamayan Vercel Web Analytics kullanılır; yalnızca toplam sayılar (görüntülenen sayfa, ülke, cihaz türü, ziyaretin geldiği site) görülür. Tarayıcınızın yerel depolama alanında yalnızca formların art arda gönderilmesini önlemeye yarayan bir zaman bilgisi tutulur. hCaptcha ve Google Haritalar gibi gömülü hizmetler kendi çerezlerini kullanabilir."
           ]
         },
         {

@@ -15,10 +15,12 @@ const BRAND_DARK = '#8A1220';
 
 const COPY = {
   tr: {
-    subject: `${SITE.shortName} Bültenine Hoş Geldiniz!`,
-    welcome: 'Hoş Geldiniz!',
+    subject: `${SITE.shortName} bülten aboneliğinizi onaylayın`,
+    welcome: 'Aboneliğinizi onaylayın',
     hello: 'Merhaba,',
-    intro: `${SITE.fullName.tr} bültenine abone olduğunuz için teşekkür ederiz! Etkinliklerimiz, eğitimlerimiz ve duyurularımız artık doğrudan size ulaşacak.`,
+    intro: `${SITE.fullName.tr} bültenine abone olma isteğinizi aldık. Aboneliğinizi tamamlamak için aşağıdaki düğmeye tıklayın; etkinliklerimiz, eğitimlerimiz ve duyurularımız ardından doğrudan size ulaşacak.`,
+    confirm: 'Aboneliğimi Onayla',
+    ignore: 'Bu isteği siz yapmadıysanız bu e-postayı yok sayabilirsiniz; onaylamadığınız sürece listeye eklenmezsiniz.',
     expectTitle: 'Neler Bekleyebilirsiniz?',
     expect: [
       'Havacılık ve uzay alanında seminer ve söyleşi duyuruları',
@@ -26,18 +28,16 @@ const COPY = {
       'Proje ve yarışma fırsatları',
       'Teknik gezi ve sektör buluşması duyuruları',
     ],
-    visit: 'Web Sitemizi Ziyaret Edin',
     follow: 'Sosyal medyada takip edin:',
     rights: 'Tüm hakları saklıdır.',
-    unsubscribe: 'Bu e-postaları almak istemiyorsanız',
-    unsubscribeLink: 'abonelikten çıkın',
-    unsubscribeSubject: 'Bülten Aboneliğinden Çık',
   },
   en: {
-    subject: `Welcome to the ${SITE.shortName} Newsletter!`,
-    welcome: 'Welcome!',
+    subject: `Confirm your ${SITE.shortName} newsletter subscription`,
+    welcome: 'Confirm your subscription',
     hello: 'Hello,',
-    intro: `Thank you for subscribing to the ${SITE.fullName.en} newsletter! Our events, training and announcements will now come straight to you.`,
+    intro: `We received your request to subscribe to the ${SITE.fullName.en} newsletter. Click the button below to complete your subscription; our events, training and announcements will then come straight to you.`,
+    confirm: 'Confirm My Subscription',
+    ignore: 'If you did not make this request, you can ignore this email; you will not be added to the list unless you confirm.',
     expectTitle: 'What to Expect',
     expect: [
       'Aviation and space seminars and talks',
@@ -45,17 +45,14 @@ const COPY = {
       'Project and competition opportunities',
       'Technical trips and industry meetups',
     ],
-    visit: 'Visit Our Website',
     follow: 'Follow us on social media:',
     rights: 'All rights reserved.',
-    unsubscribe: 'If you no longer wish to receive these emails,',
-    unsubscribeLink: 'unsubscribe',
-    unsubscribeSubject: 'Unsubscribe from Newsletter',
   },
 } as const;
 
-// Email templates
-export const getWelcomeEmailTemplate = (locale: string) => {
+// Abonelik onayı maili: abone olan kişiye gider; düğmeye tıklayınca abonelik onaylanır.
+// Hoş geldin içeriğini de taşır, onaydan sonra ayrıca mail gönderilmez.
+export const getConfirmEmailTemplate = (locale: string, confirmUrl: string) => {
   const lang = locale === 'tr' ? 'tr' : 'en';
   const c = COPY[lang];
   const socials = [
@@ -83,14 +80,15 @@ export const getWelcomeEmailTemplate = (locale: string) => {
             <p>${c.hello}</p>
             <p>${c.intro}</p>
 
+            <div style="text-align: center; margin: 28px 0;">
+              <a href="${escapeHtml(confirmUrl)}" style="display: inline-block; background: linear-gradient(to right, ${BRAND}, ${BRAND_DARK}); color: white; padding: 13px 32px; text-decoration: none; border-radius: 6px; font-weight: 600;">${c.confirm}</a>
+            </div>
+            <p style="font-size: 13px; color: #6B7280;">${c.ignore}</p>
+
             <h3 style="color: ${BRAND}; font-size: 18px; margin-top: 30px;">${c.expectTitle}</h3>
             <ul style="padding-left: 20px;">
               ${c.expect.map((item) => `<li style="margin-bottom: 10px;">${item}</li>`).join('')}
             </ul>
-
-            <div style="text-align: center; margin-top: 30px;">
-              <a href="${SITE.url}" style="display: inline-block; background: linear-gradient(to right, ${BRAND}, ${BRAND_DARK}); color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600;">${c.visit}</a>
-            </div>
 
             ${
               socials.length
@@ -106,9 +104,6 @@ export const getWelcomeEmailTemplate = (locale: string) => {
 
           <div style="text-align: center; padding: 20px; font-size: 12px; color: #9CA3AF;">
             <p>© ${new Date().getFullYear()} ${SITE.fullName[lang]}. ${c.rights}</p>
-            <p style="margin-top: 10px;">
-              ${c.unsubscribe} <a href="mailto:${SITE.email}?subject=${encodeURIComponent(c.unsubscribeSubject)}" style="color: ${BRAND};">${c.unsubscribeLink}</a>.
-            </p>
           </div>
         </body>
       </html>

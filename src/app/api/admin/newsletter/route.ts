@@ -32,6 +32,7 @@ export async function GET(request: NextRequest) {
         id: doc.id,
         email: data.email,
         locale: data.locale,
+        status: data.status === 'pending' ? 'pending' : 'active',
         subscribedAt: toIsoString(data.subscribedAt),
       };
     });

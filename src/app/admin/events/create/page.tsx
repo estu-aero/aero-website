@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,8 +42,19 @@ export default function CreateEventPage() {
     setLoading(true);
 
     try {
+      // Adres (slug) İngilizce başlıktan üretilir; aynı adresli etkinlik varsa sonuna tarih eklenir
+      const temelSlug =
+        formData.titleEn.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'etkinlik';
+      const slugDoluMu = async (aday: string) =>
+        !(await getDocs(query(collection(db, 'events'), where('slug', '==', aday)))).empty;
+      let slug = temelSlug;
+      if (await slugDoluMu(slug)) {
+        slug = `${temelSlug}-${formData.date || Date.now()}`;
+        for (let n = 2; await slugDoluMu(slug); n++) slug = `${temelSlug}-${formData.date}-${n}`;
+      }
+
       const eventData = {
-        slug: formData.titleEn.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+        slug,
         title: {
           tr: formData.titleTr,
           en: formData.titleEn,

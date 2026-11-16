@@ -1,3 +1,4 @@
+import { SiteAnalytics } from '@/components/SiteAnalytics';
 import type { Metadata } from "next";
 import { getLocale } from 'next-intl/server';
 import { Inter } from 'next/font/google';
@@ -116,6 +117,7 @@ export default async function RootLayout({
       </head>
       <body className={`${inter.variable} font-sans antialiased`}>
         {children}
+        <SiteAnalytics />
       </body>
     </html>
   );

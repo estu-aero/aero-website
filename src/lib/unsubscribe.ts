@@ -6,12 +6,13 @@ import { SITE } from '@/config/site';
 // Anahtar: NEWSLETTER_SECRET (varsa), yoksa Firebase sunucu anahtarı.
 const anahtar = () => process.env.NEWSLETTER_SECRET || process.env.FIREBASE_PRIVATE_KEY || '';
 
-const imza = (email: string) =>
-  createHmac('sha256', anahtar()).update(email.trim().toLowerCase()).digest('base64url').slice(0, 32);
+// ek: aynı anahtardan ayrı amaçlar için ayrı imza üretir (ör. abonelik onayı); çıkış bağlantısı ek kullanmaz
+const imza = (email: string, ek = '') =>
+  createHmac('sha256', anahtar() + ek).update(email.trim().toLowerCase()).digest('base64url').slice(0, 32);
 
-export function imzaDogrula(email: string, verilen: string) {
+export function imzaDogrula(email: string, verilen: string, ek = '') {
   if (!anahtar() || !verilen) return false;
-  const beklenen = Buffer.from(imza(email));
+  const beklenen = Buffer.from(imza(email, ek));
   const gelen = Buffer.from(verilen);
   return beklenen.length === gelen.length && timingSafeEqual(beklenen, gelen);
 }
@@ -62,3 +63,9 @@ export const bultenAlanlari = (html: string, email: string, locale: string) => {
   const kisisel = kisisellestir(html, email, locale);
   return { html: kisisel, text: metneCevir(kisisel), headers: unsubscribeHeaders(email, locale) };
 };
+
+// Abonelik onayı bağlantısı: çıkış bağlantısından farklı imza kullanır (biri diğerinin yerine geçemez)
+const ONAY_EKI = '|onay';
+export const onayImzasiDogrula = (email: string, verilen: string) => imzaDogrula(email, verilen, ONAY_EKI);
+export const onayUrl = (email: string, locale: string) =>
+  `${SITE.url}/api/newsletter/confirm?e=${epostaKodla(email)}&t=${imza(email, ONAY_EKI)}&l=${locale === 'en' ? 'en' : 'tr'}`;

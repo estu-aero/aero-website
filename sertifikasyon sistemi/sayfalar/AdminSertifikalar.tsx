@@ -281,8 +281,8 @@ export default function AdminSertifikalar() {
   };
 
   const mailGonder = async (grup: GrupKaydi) => {
-    const tekrar = grup.sentAt ? 'Bu grubun mailleri daha önce gönderildi. Katılımcılar maili İKİNCİ KEZ alacak.\n\n' : '';
-    if (!confirm(`${tekrar}"${grup.eventName}" sertifikaları ${grup.count} katılımcıya mail ile gönderilsin mi? Gönderilen mail geri alınamaz.`)) return;
+    const devam = grup.sentAt ? 'Bu grubun mailleri daha önce gönderildi. Sadece henüz mail almamış katılımcılara gönderilecek.\n\n' : '';
+    if (!confirm(`${devam}"${grup.eventName}" sertifikaları mail ile gönderilsin mi? (Bir seferde en fazla 100 kişi.) Gönderilen mail geri alınamaz.`)) return;
     setMesgul(grup.id);
     setMesaj(null);
     try {
@@ -293,10 +293,40 @@ export default function AdminSertifikalar() {
       });
       const veri = await yanit.json().catch(() => ({}));
       if (!yanit.ok || !veri.success) throw new Error(veri.error || 'Mailler gönderilemedi.');
-      setMesaj({ tur: 'basari', metin: `Mailler gönderildi: ${veri.sent}/${veri.total}.` });
+      setMesaj({
+        tur: 'basari',
+        metin:
+          veri.sent === 0
+            ? 'Bu grubun tüm mailleri zaten gönderilmiş; kimseye tekrar gönderilmedi.'
+            : veri.remaining > 0
+              ? `${veri.sent} kişiye gönderildi, ${veri.remaining} kişi kaldı. Günlük 100 mail sınırı nedeniyle kalanlara yarın aynı düğmeyle devam edin.`
+              : `${veri.sent} kişiye gönderildi. Grubun tüm mailleri gönderildi.`,
+      });
       await gruplariYukle();
     } catch (hata) {
       setMesaj({ tur: 'hata', metin: hata instanceof Error ? hata.message : 'Mailler gönderilemedi.' });
+    } finally {
+      setMesgul(null);
+    }
+  };
+
+  // Tek bir katılımcıya sertifika mailini (yeniden) gönderir: ör. maili ulaşmayan kişi
+  const tekMailGonder = async (s: GrupSertifikasi) => {
+    if (!acikGrup) return;
+    if (!confirm(`${s.name} (${s.email}) adresine sertifika maili gönderilsin mi?`)) return;
+    setMesgul(s.id);
+    try {
+      const yanit = await adminFetch('/api/admin/certificates/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ eventId: acikGrup, certificateId: s.id }),
+      });
+      const veri = await yanit.json().catch(() => ({}));
+      if (!yanit.ok || !veri.success) throw new Error(veri.error || 'Mail gönderilemedi.');
+      setMesaj({ tur: 'basari', metin: `${s.name} adresine sertifika maili gönderildi.` });
+      await gruplariYukle();
+    } catch (hata) {
+      setMesaj({ tur: 'hata', metin: hata instanceof Error ? hata.message : 'Mail gönderilemedi.' });
     } finally {
       setMesgul(null);
     }
@@ -572,7 +602,17 @@ PDF depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem 
                                     {s.id}
                                   </a>
                                 </td>
-                                <td className="px-4 py-2 text-right">
+                                <td className="px-4 py-2 text-right whitespace-nowrap">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => tekMailGonder(s)}
+                                    disabled={mesgul === s.id}
+                                    title="Bu kişiye sertifika mailini (yeniden) gönder"
+                                  >
+                                    <Mail className="mr-1 h-4 w-4" />
+                                    Mail
+                                  </Button>
                                   <Button
                                     variant="ghost"
                                     size="sm"
