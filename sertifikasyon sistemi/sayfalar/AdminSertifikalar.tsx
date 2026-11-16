@@ -38,13 +38,17 @@ type GrupSertifikasi = SertifikaKaydi & { email: string };
 
 const EPOSTA = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Sadece boşluk, tırnak ve ayraçtan (, ; tab) oluşan satır boş sayılır
+const bosSatir = (satir: string) => !satir.replace(/[\s,;"]/g, '');
+
 // "Ad Soyad, e-posta" satırlarını (veya CSV / Excel'den yapıştırılan tabloyu) okur
 function katilimcilariOku(metin: string) {
   const katilimcilar: Katilimci[] = [];
   const hatalar: string[] = [];
   metin.split(/\r?\n/).forEach((satir, i) => {
     const temiz = satir.trim();
-    if (!temiz) return;
+    // Boş satırlar ve Excel'in boş satırlar için yazdığı ";;" gibi satırlar atlanır
+    if (bosSatir(temiz)) return;
     const parcalar = temiz.split(/[,;\t]/).map((p) => p.trim().replace(/^"|"$/g, ''));
     const epostaSirasi = parcalar.findIndex((p) => p.includes('@'));
     // Başlık satırı (full_name,mail / ad,eposta) atlanır
@@ -379,7 +383,14 @@ PDF depodan silinir, doğrulama sayfasında "bulunamadı" görünür. Bu işlem 
     } catch {
       metin = new TextDecoder('windows-1254').decode(baytlar);
     }
-    setListe(metin.replace(/^﻿/, ''));
+    // Excel'in boş satırları (";") kutuya hiç gelmesin
+    setListe(
+      metin
+        .replace(/^﻿/, '')
+        .split(/\r?\n/)
+        .filter((satir) => !bosSatir(satir))
+        .join('\n')
+    );
     e.target.value = '';
   };
 
