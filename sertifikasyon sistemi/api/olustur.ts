@@ -31,6 +31,33 @@ const istekSemasi = z.object({
   participants: z.array(katilimciSemasi).min(1).max(PARTI_BOYUTU),
 });
 
+const ALAN_ADLARI: Record<string, string> = {
+  eventName: 'Etkinlik adı (2-150 karakter)',
+  eventNameEn: 'İngilizce etkinlik adı (en fazla 150 karakter)',
+  date: 'Tarih (YYYY-AA-GG)',
+  text: 'Sertifika metni (5-600 karakter)',
+  template: 'Şablon',
+  name: 'ad soyad (2-120 karakter)',
+  email: 'e-posta',
+};
+
+// Doğrulama hatasını admin için anlaşılır hale getirir: hangi alan, hangi katılımcı
+function hataAciklamasi(
+  sorunlar: { path: PropertyKey[] }[],
+  govde: { participants?: { name?: unknown; email?: unknown }[] } | null
+) {
+  const yol = sorunlar[0]?.path ?? [];
+  if (yol[0] === 'participants' && typeof yol[1] === 'number') {
+    const k = govde?.participants?.[yol[1]];
+    const alan = ALAN_ADLARI[String(yol[2])] ?? 'bilgileri';
+    const deger = String((yol[2] === 'email' ? k?.email : k?.name) ?? '').slice(0, 80);
+    return `"${String(k?.name ?? '').slice(0, 60)}" adlı katılımcının ${alan} geçersiz: "${deger}". Listeyi kontrol edin.`;
+  }
+  if (yol[0] === 'participants') return 'Katılımcı listesi boş ya da çok uzun.';
+  if (yol[0] === 'event') return `Geçersiz alan: ${ALAN_ADLARI[String(yol[1])] ?? String(yol[1])}.`;
+  return 'Geçersiz istek. Katılımcı bilgilerini kontrol edin.';
+}
+
 // Bir parti sertifika oluşturur: PDF üretir, Vercel Blob'a yükler, kayıtları yazar.
 export async function POST(request: NextRequest) {
   const admin = await requireAdmin(request);
@@ -44,9 +71,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const ayrisma = istekSemasi.safeParse(await request.json().catch(() => null));
+  const govde = await request.json().catch(() => null);
+  const ayrisma = istekSemasi.safeParse(govde);
   if (!ayrisma.success) {
-    return NextResponse.json({ error: 'Geçersiz istek. Katılımcı bilgilerini kontrol edin.' }, { status: 400 });
+    return NextResponse.json({ error: hataAciklamasi(ayrisma.error.issues, govde) }, { status: 400 });
   }
   const { participants } = ayrisma.data;
 

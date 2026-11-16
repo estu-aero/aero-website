@@ -49,7 +49,10 @@ function katilimcilariOku(metin: string) {
     const temiz = satir.trim();
     // Boş satırlar ve Excel'in boş satırlar için yazdığı ";;" gibi satırlar atlanır
     if (bosSatir(temiz)) return;
-    const parcalar = temiz.split(/[,;\t]/).map((p) => p.trim().replace(/^"|"$/g, ''));
+    // Excel'den gelebilen görünmez karakterler (sıfır genişlikli boşluk, BOM vb.) temizlenir
+    const parcalar = temiz
+      .split(/[,;\t]/)
+      .map((p) => p.replace(/[​-‍⁠﻿ ]/g, ' ').trim().replace(/^"|"$/g, '').trim());
     const epostaSirasi = parcalar.findIndex((p) => p.includes('@'));
     // Başlık satırı (full_name,mail / ad,eposta) atlanır
     if (epostaSirasi === -1 && i === 0) return;
