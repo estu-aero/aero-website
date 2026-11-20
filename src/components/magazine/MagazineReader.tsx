@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { dergiIndir } from '@/lib/magazine';
+import FlipBook, { type FlipBookHandle } from './FlipBook';
 import {
   ChevronLeft,
   ChevronRight,
@@ -40,8 +41,6 @@ interface MagazineReaderProps {
   };
 }
 
-// A4 dikey sayfa oranı (yükseklik / genişlik); sayfa boyutunu ekrana sığdırmak için kullanılır
-const PAGE_RATIO = 1.414;
 
 export default function MagazineReader({
   title,
@@ -73,43 +72,16 @@ export default function MagazineReader({
     return () => observer.disconnect();
   }, []);
 
-  // Geniş ekranda çift sayfa: kapak tek başına, sonra 2-3, 4-5...
-  const twoUp = mode === 'spread' && size.width >= 900;
-  const spreadStart = twoUp && page > 1 ? page - (page % 2) : page;
-  const visiblePages = twoUp
-    ? spreadStart === 1
-      ? [1]
-      : [spreadStart, spreadStart + 1].filter((p) => p <= numPages)
-    : [page];
-
-  // Önceki ve sonraki görünümün sayfaları (arka planda önceden çizilir)
-  const gorunumSayfalari = (baslangic: number) =>
-    twoUp && baslangic > 1 ? [baslangic, baslangic + 1].filter((p) => p <= numPages) : [baslangic];
-  const oncekiBaslangic = twoUp ? (spreadStart <= 2 ? 1 : spreadStart - 2) : spreadStart - 1;
-  const sonrakiBaslangic = twoUp ? (spreadStart === 1 ? 2 : spreadStart + 2) : spreadStart + 1;
-  const komsuSayfalar = [
-    ...(spreadStart > 1 ? [gorunumSayfalari(oncekiBaslangic)] : []),
-    visiblePages,
-    ...(sonrakiBaslangic <= numPages ? [gorunumSayfalari(sonrakiBaslangic)] : []),
-  ];
-
-  const step = twoUp ? (spreadStart === 1 ? 1 : 2) : 1;
-  const canPrev = spreadStart > 1;
-  const canNext = visiblePages[visiblePages.length - 1] < numPages;
-
-  const goPrev = useCallback(() => {
-    setPage((current) => {
-      const start = twoUp && current > 1 ? current - (current % 2) : current;
-      return Math.max(1, start - (twoUp ? 2 : 1));
-    });
-  }, [twoUp]);
-
-  const goNext = useCallback(() => {
-    setPage((current) => {
-      const start = twoUp && current > 1 ? current - (current % 2) : current;
-      return Math.min(numPages || 1, start + step);
-    });
-  }, [twoUp, step, numPages]);
+  // Sayfa sayfa mod: kıvırmalı kitap (FlipBook). Görünen ilk sayfa ve çift sayfa durumu ondan gelir.
+  const kitapRef = useRef<FlipBookHandle>(null);
+  const [cift, setCift] = useState(false);
+  const [kitapHatasi, setKitapHatasi] = useState(false);
+  const goruneSonSayfa = cift && page > 1 ? Math.min(page + 1, numPages) : page;
+  const visiblePages = goruneSonSayfa > page ? [page, goruneSonSayfa] : [page];
+  const canPrev = page > 1;
+  const canNext = goruneSonSayfa < numPages;
+  const goPrev = useCallback(() => kitapRef.current?.prev(), []);
+  const goNext = useCallback(() => kitapRef.current?.next(), []);
 
   // Klavye: ok tuşları ve Esc
   useEffect(() => {
@@ -136,12 +108,6 @@ export default function MagazineReader({
   const padding = 32;
   const availableWidth = Math.max(0, size.width - padding * 2);
   const availableHeight = Math.max(0, size.height - padding);
-  const spreadPageWidth = Math.floor(
-    Math.min(
-      availableWidth / (twoUp ? 2 : 1),
-      availableHeight / PAGE_RATIO
-    )
-  );
   const scrollPageWidth = Math.floor(Math.min(availableWidth, 900));
 
   const loading = (
@@ -221,62 +187,53 @@ export default function MagazineReader({
         ref={stageRef}
         className={`relative flex-1 ${mode === 'scroll' ? 'overflow-y-auto' : 'overflow-hidden'}`}
       >
-        <Document
-          file={pdfUrl}
-          // Kütüphanenin bekleme (Suspense) modu kapalı: açıkken yeni bir sayfa yüklenirken
-          // ekrandaki bütün sayfalar kısa süreliğine kaldırılıyordu (sayfa geçişindeki beyaz parlama)
-          suspense={false}
-          onLoadSuccess={({ numPages: total }) => setNumPages(total)}
-          loading={loading}
-          error={<p className="py-20 text-neutral-400">{labels.error}</p>}
-          className={
-            mode === 'scroll'
-              ? 'flex flex-col items-center gap-4 py-4'
-              : 'flex h-full items-center justify-center'
-          }
-        >
-          {size.width > 0 &&
-            numPages > 0 &&
-            (mode === 'scroll'
-              ? Array.from({ length: numPages }, (_, index) => (
-                  <Page
-                    key={index + 1}
-                    pageNumber={index + 1}
-                    width={scrollPageWidth}
-                    renderTextLayer={false}
-                    renderAnnotationLayer={false}
-                    className="shadow-2xl"
-                  />
-                ))
-              : (
-                  // Önceki, şu anki ve sonraki sayfa(lar) birlikte çizilir; yalnızca şu anki görünür.
-                  // Sayfa geçince yeni sayfa zaten çizilmiş olduğu için beyaz parlama olmaz.
-                  <div className="relative h-full w-full">
-                    {komsuSayfalar.map((sayfalar) => {
-                      const gorunur = sayfalar[0] === visiblePages[0];
-                      return (
-                        <div
-                          key={sayfalar[0]}
-                          aria-hidden={!gorunur}
-                          className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${gorunur ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
-                        >
-                          {sayfalar.map((pageNumber) => (
-                            <Page
-                              key={pageNumber}
-                              pageNumber={pageNumber}
-                              width={spreadPageWidth}
-                              renderTextLayer={false}
-                              renderAnnotationLayer={false}
-                              loading={null}
-                              className="shadow-2xl"
-                            />
-                          ))}
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))}
-        </Document>
+        {mode === 'spread' ? (
+          kitapHatasi ? (
+            <p className="py-20 text-center text-neutral-400">{labels.error}</p>
+          ) : (
+            <>
+              {numPages === 0 && <div className="absolute inset-0 flex items-center justify-center">{loading}</div>}
+              {size.width > 0 && (
+                <FlipBook
+                  ref={kitapRef}
+                  pdfUrl={pdfUrl}
+                  width={size.width}
+                  height={size.height}
+                  onLoad={setNumPages}
+                  onPageChange={(ilk, ciftSayfa) => {
+                    setPage(ilk);
+                    setCift(ciftSayfa);
+                  }}
+                  onError={() => setKitapHatasi(true)}
+                />
+              )}
+            </>
+          )
+        ) : (
+          <Document
+            file={pdfUrl}
+            // Kütüphanenin bekleme (Suspense) modu kapalı: açıkken yeni bir sayfa yüklenirken
+            // ekrandaki bütün sayfalar kısa süreliğine kaldırılıyordu
+            suspense={false}
+            onLoadSuccess={({ numPages: total }) => setNumPages(total)}
+            loading={loading}
+            error={<p className="py-20 text-neutral-400">{labels.error}</p>}
+            className="flex flex-col items-center gap-4 py-4"
+          >
+            {size.width > 0 &&
+              numPages > 0 &&
+              Array.from({ length: numPages }, (_, index) => (
+                <Page
+                  key={index + 1}
+                  pageNumber={index + 1}
+                  width={scrollPageWidth}
+                  renderTextLayer={false}
+                  renderAnnotationLayer={false}
+                  className="shadow-2xl"
+                />
+              ))}
+          </Document>
+        )}
 
         {mode === 'spread' && numPages > 0 && (
           <>
@@ -285,7 +242,7 @@ export default function MagazineReader({
               onClick={goPrev}
               disabled={!canPrev}
               aria-label={labels.previous}
-              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 backdrop-blur transition-colors hover:bg-brand disabled:opacity-0 sm:left-4 sm:p-3"
+              className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-2 backdrop-blur transition-colors hover:bg-brand disabled:opacity-0 sm:left-4 sm:p-3"
             >
               <ChevronLeft className="h-6 w-6" />
             </button>
@@ -294,7 +251,7 @@ export default function MagazineReader({
               onClick={goNext}
               disabled={!canNext}
               aria-label={labels.next}
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 backdrop-blur transition-colors hover:bg-brand disabled:opacity-0 sm:right-4 sm:p-3"
+              className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-2 backdrop-blur transition-colors hover:bg-brand disabled:opacity-0 sm:right-4 sm:p-3"
             >
               <ChevronRight className="h-6 w-6" />
             </button>
