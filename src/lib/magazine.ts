@@ -41,3 +41,26 @@ export const formatIssueDate = (date: string, locale: string) => {
 // Vercel Blob adresine ?download=1 eklenince tarayıcı dosyayı açmak yerine indirir
 export const downloadUrl = (pdfUrl: string) =>
   `${pdfUrl}${pdfUrl.includes('?') ? '&' : '?'}download=1`;
+
+// İndirilen dosyanın adı: depodaki dosya adının sonunda rastgele bir ek olduğu için anlamlı ad verilir
+export const pdfDosyaAdi = (issue: { number: number }) => `AERO-Dergi-Sayi-${issue.number}.pdf`;
+
+// PDF'i istenen adla indirir. Dosya başka alan adında (Vercel Blob) olduğu için <a download> adı
+// tarayıcılarca yok sayılır; bu yüzden dosya önce indirilip sayfa içinden adıyla kaydedilir.
+// Bir sorun olursa doğrudan indirme bağlantısına geçilir.
+export async function dergiIndir(pdfUrl: string, dosyaAdi: string) {
+  try {
+    const yanit = await fetch(pdfUrl);
+    if (!yanit.ok) throw new Error(String(yanit.status));
+    const adres = URL.createObjectURL(await yanit.blob());
+    const baglanti = document.createElement('a');
+    baglanti.href = adres;
+    baglanti.download = dosyaAdi;
+    document.body.appendChild(baglanti);
+    baglanti.click();
+    baglanti.remove();
+    setTimeout(() => URL.revokeObjectURL(adres), 60_000);
+  } catch {
+    window.location.href = downloadUrl(pdfUrl);
+  }
+}

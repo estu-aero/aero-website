@@ -15,6 +15,7 @@ import {
   type MagazineIssue,
   issueTitle,
   downloadUrl,
+  pdfDosyaAdi,
 } from '@/lib/magazine';
 
 // PDF okuyucu sadece tarayıcıda çalışır
@@ -117,6 +118,7 @@ export default function MagazinePage() {
           title={`${t('title')} · ${issueTitle(reading, locale)}`}
           pdfUrl={reading.pdfUrl}
           downloadHref={downloadUrl(reading.pdfUrl)}
+          downloadName={pdfDosyaAdi(reading)}
           onClose={() => setReading(null)}
           labels={{
             close: t('reader.close'),

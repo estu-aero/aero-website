@@ -1,13 +1,16 @@
 'use client';
 
 import Image from 'next/image';
-import { BookOpen, Download, Calendar, FileText } from 'lucide-react';
+import { useState } from 'react';
+import { BookOpen, Download, Calendar, FileText, Loader2 } from 'lucide-react';
 import {
   type MagazineIssue,
   issueTitle,
   issueDescription,
   formatIssueDate,
   downloadUrl,
+  dergiIndir,
+  pdfDosyaAdi,
 } from '@/lib/magazine';
 
 export interface ArchiveLabels {
@@ -59,6 +62,7 @@ export function MagazineArchive({
   onRead,
 }: MagazineArchiveProps) {
   const [latest, ...older] = issues;
+  const [indiriliyor, setIndiriliyor] = useState(false);
   if (!latest) return null;
 
   return (
@@ -107,9 +111,17 @@ export function MagazineArchive({
             </button>
             <a
               href={downloadUrl(latest.pdfUrl)}
+              onClick={async (e) => {
+                e.preventDefault();
+                if (indiriliyor) return;
+                setIndiriliyor(true);
+                await dergiIndir(latest.pdfUrl, pdfDosyaAdi(latest));
+                setIndiriliyor(false);
+              }}
+              aria-busy={indiriliyor}
               className="inline-flex items-center gap-2 rounded-xl border-2 border-brand px-5 py-2.5 text-sm font-medium text-brand transition-colors hover:bg-brand/10"
             >
-              <Download className="h-4 w-4" />
+              {indiriliyor ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
               {labels.download}
             </a>
           </div>

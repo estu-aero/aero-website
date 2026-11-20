@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
+import { dergiIndir } from '@/lib/magazine';
 import {
   ChevronLeft,
   ChevronRight,
@@ -22,6 +23,8 @@ interface MagazineReaderProps {
   pdfUrl: string;
   // Verilmezse pdfUrl indirilir
   downloadHref?: string;
+  // İndirilen dosyanın adı (ör. AERO-Dergi-Sayi-1.pdf)
+  downloadName?: string;
   onClose: () => void;
   // spread: dergi gibi sayfa sayfa (geniş ekranda çift sayfa), scroll: alt alta kaydırmalı
   initialMode?: ReaderMode;
@@ -44,6 +47,7 @@ export default function MagazineReader({
   title,
   pdfUrl,
   downloadHref,
+  downloadName,
   onClose,
   initialMode = 'spread',
   labels,
@@ -52,6 +56,7 @@ export default function MagazineReader({
   const [page, setPage] = useState(1);
   const [mode, setMode] = useState<ReaderMode>(initialMode);
   const [size, setSize] = useState({ width: 0, height: 0 });
+  const [indiriliyor, setIndiriliyor] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
 
   // Okuma alanının boyutunu izle
@@ -76,6 +81,17 @@ export default function MagazineReader({
       ? [1]
       : [spreadStart, spreadStart + 1].filter((p) => p <= numPages)
     : [page];
+
+  // Önceki ve sonraki görünümün sayfaları (arka planda önceden çizilir)
+  const gorunumSayfalari = (baslangic: number) =>
+    twoUp && baslangic > 1 ? [baslangic, baslangic + 1].filter((p) => p <= numPages) : [baslangic];
+  const oncekiBaslangic = twoUp ? (spreadStart <= 2 ? 1 : spreadStart - 2) : spreadStart - 1;
+  const sonrakiBaslangic = twoUp ? (spreadStart === 1 ? 2 : spreadStart + 2) : spreadStart + 1;
+  const komsuSayfalar = [
+    ...(spreadStart > 1 ? [gorunumSayfalari(oncekiBaslangic)] : []),
+    visiblePages,
+    ...(sonrakiBaslangic <= numPages ? [gorunumSayfalari(sonrakiBaslangic)] : []),
+  ];
 
   const step = twoUp ? (spreadStart === 1 ? 1 : 2) : 1;
   const canPrev = spreadStart > 1;
@@ -173,11 +189,20 @@ export default function MagazineReader({
 
         <a
           href={downloadHref ?? pdfUrl}
-          download
+          download={downloadName}
+          onClick={async (event) => {
+            if (!downloadName) return;
+            event.preventDefault();
+            if (indiriliyor) return;
+            setIndiriliyor(true);
+            await dergiIndir(pdfUrl, downloadName);
+            setIndiriliyor(false);
+          }}
+          aria-busy={indiriliyor}
           title={labels.download}
           className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-medium text-neutral-300 hover:bg-white/10 hover:text-white"
         >
-          <Download className="h-4 w-4" />
+          {indiriliyor ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
           <span className="hidden sm:inline">{labels.download}</span>
         </a>
         <button
@@ -220,16 +245,34 @@ export default function MagazineReader({
                     className="shadow-2xl"
                   />
                 ))
-              : visiblePages.map((pageNumber) => (
-                  <Page
-                    key={pageNumber}
-                    pageNumber={pageNumber}
-                    width={spreadPageWidth}
-                    renderTextLayer={false}
-                    renderAnnotationLayer={false}
-                    className="shadow-2xl"
-                  />
-                )))}
+              : (
+                  // Önceki, şu anki ve sonraki sayfa(lar) birlikte çizilir; yalnızca şu anki görünür.
+                  // Sayfa geçince yeni sayfa zaten çizilmiş olduğu için beyaz parlama olmaz.
+                  <div className="relative h-full w-full">
+                    {komsuSayfalar.map((sayfalar) => {
+                      const gorunur = sayfalar[0] === visiblePages[0];
+                      return (
+                        <div
+                          key={sayfalar[0]}
+                          aria-hidden={!gorunur}
+                          className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${gorunur ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+                        >
+                          {sayfalar.map((pageNumber) => (
+                            <Page
+                              key={pageNumber}
+                              pageNumber={pageNumber}
+                              width={spreadPageWidth}
+                              renderTextLayer={false}
+                              renderAnnotationLayer={false}
+                              loading={null}
+                              className="shadow-2xl"
+                            />
+                          ))}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
         </Document>
 
         {mode === 'spread' && numPages > 0 && (
