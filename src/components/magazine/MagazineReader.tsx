@@ -223,6 +223,9 @@ export default function MagazineReader({
       >
         <Document
           file={pdfUrl}
+          // Kütüphanenin bekleme (Suspense) modu kapalı: açıkken yeni bir sayfa yüklenirken
+          // ekrandaki bütün sayfalar kısa süreliğine kaldırılıyordu (sayfa geçişindeki beyaz parlama)
+          suspense={false}
           onLoadSuccess={({ numPages: total }) => setNumPages(total)}
           loading={loading}
           error={<p className="py-20 text-neutral-400">{labels.error}</p>}
